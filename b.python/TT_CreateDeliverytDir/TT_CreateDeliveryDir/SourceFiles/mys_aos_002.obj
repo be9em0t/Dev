@@ -1,0 +1,11 @@
+# Exported by Chaosgroup LTD
+# entrypoint(WGS84):  100.368958 deg 6.13616 deg
+# utm zone: WGS84UTM_ZONE_47N
+mtllib mys_aos_002.mtl
+#
+
+# 627 texture coords
+
+usemtl texture_mys_aos_002_png
+
+s off

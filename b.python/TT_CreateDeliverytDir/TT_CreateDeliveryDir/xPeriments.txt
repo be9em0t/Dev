@@ -1,0 +1,40 @@
+#var = tkSimpleDialog.askstring("Name prompt", "enter your name")
+#print var
+
+
+===========
+from Tkinter import *
+import sys
+
+
+
+
+def doNothing():
+    print(TextArea.)
+
+
+root = Tk()
+#root.withdraw() #use to hide tkinter window
+root.title("TextEditor")
+root.geometry("300x200")
+menu = Menu(root)
+root.config(menu=menu)
+
+subMenu = Menu(menu)
+menu.add_cascade(label="File", menu=subMenu)
+subMenu.add_command(label="New Project...", command =doNothing)
+subMenu.add_command(label="Save", command=doNothing)
+subMenu.add_separator()
+
+editMenu = Menu(menu)
+menu.add_cascade(label="Edit", menu=editMenu)
+editMenu.add_command(label="Undo",command=doNothing)
+
+TextArea = Text()
+ScrollBar = Scrollbar(root)
+ScrollBar.config(command=TextArea.yview)
+TextArea.config(yscrollcommand=ScrollBar.set)
+ScrollBar.pack(side=RIGHT, fill=Y)
+TextArea.pack(expand=YES, fill=BOTH)
+
+root.mainloop()

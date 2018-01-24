@@ -1,0 +1,16 @@
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\bin\Debug\DeskPilotWPF.exe.config
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\bin\Debug\DeskPilotWPF.exe
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\bin\Debug\DeskPilotWPF.pdb
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\MainWindow.g.cs
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\App.g.cs
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF_MarkupCompile.cache
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF_MarkupCompile.lref
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\MainWindow.baml
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.g.resources
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.exe
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\DeskPilotWPF.pdb
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\Simple Styles.baml
+C:\Work\OneDrive\Work\Visual Studio\b9VS\b9VS\DeskPilotWPF\obj\Debug\App.baml

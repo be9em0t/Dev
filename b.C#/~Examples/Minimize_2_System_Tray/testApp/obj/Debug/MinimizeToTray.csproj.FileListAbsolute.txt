@@ -1,0 +1,8 @@
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\bin\Debug\MinimizeToTray.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\bin\Debug\MinimizeToTray.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.TrayMinimizerForm.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\~Examples\Minimize_2_System_Tray\testApp\obj\Debug\MinimizeToTray.pdb

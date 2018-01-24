@@ -1,0 +1,7 @@
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\bin\Debug\UIPC_SDK_CSHARP.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\bin\Debug\UIPC_SDK_CSHARP.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\obj\Debug\UIPC_SDK_CSHARP.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\obj\Debug\FsuipcSdk.TestConsoleForm.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\obj\Debug\UIPC_SDK_CSHARP.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\obj\Debug\UIPC_SDK_CSHARP.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\UIPC_SDK_CSHARP Revision 1.13\obj\Debug\UIPC_SDK_CSHARP.pdb

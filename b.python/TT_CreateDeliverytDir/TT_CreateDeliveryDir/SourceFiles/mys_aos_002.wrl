@@ -1,0 +1,43 @@
+#VRML V2.0 utf8 
+WorldInfo { 
+ title "mys_aos_002" 
+ info [ 
+    "Exported by Chaosgroup LTD", 
+    "entrypoint(WGS84): 100.368958 deg 6.13616 deg",
+    "utm zone: WGS84UTM_ZONE_47N"
+ ] 
+} 
+
+DirectionalLight {
+    on TRUE
+    intensity 0.8
+    color 1 1 1
+    direction 0 -1 -1 # South, 45°
+}
+DirectionalLight {
+    on TRUE
+    intensity 0.5
+    color 1 1 1
+    direction 1 0 0 # West
+}
+DirectionalLight {
+    on TRUE
+    intensity 0.4
+    color 1 1 1
+    direction 0 0 1 # North
+}
+DirectionalLight {
+    on TRUE
+    intensity 0.5
+    color 1 1 1
+    direction -4 -1 0 # East, 14°
+}
+ 
+    Shape {
+      appearance Appearance {
+        material Material {
+          diffuseColor 1 1 1}
+        texture ImageTexture {
+          url "mys_aos_002.png"
+        }
+      }

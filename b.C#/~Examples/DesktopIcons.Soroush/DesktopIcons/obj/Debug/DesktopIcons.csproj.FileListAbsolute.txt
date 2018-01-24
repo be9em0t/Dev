@@ -1,0 +1,9 @@
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\bin\Debug\DesktopIcons.exe.config
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\bin\Debug\DesktopIcons.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\bin\Debug\DesktopIcons.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.Form1.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DesktopIcons.Soroush\DesktopIcons\obj\Debug\DesktopIcons.pdb

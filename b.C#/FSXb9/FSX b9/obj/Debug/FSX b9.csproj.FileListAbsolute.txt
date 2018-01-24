@@ -1,0 +1,37 @@
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\FSX b9.exe.config
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\FSX b9.exe
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\FSX b9.pdb
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX b9.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX_b9.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX b9.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX b9.exe
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX b9.pdb
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\obj\Debug\FSX_b9.Form1.resources
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Kernel32.dll
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.User32.dll
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.Core.dll
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.ShellScalingApi.dll
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Kernel32.xml
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.User32.xml
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.Core.xml
+C:\Work\OneDrive\Work\Visual Studio\C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.ShellScalingApi.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\FSX b9.exe.config
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX b9.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX b9.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\FSX b9.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\FSX b9.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Kernel32.dll
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.User32.dll
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.Core.dll
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.ShellScalingApi.dll
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Kernel32.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.User32.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.Core.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\PInvoke.Windows.ShellScalingApi.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX b9.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX_b9.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX b9.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\FSUIPCClient.dll
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\bin\Debug\FSUIPCClient.xml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSX_b9.FormFSX.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\FSXb9\FSX b9\obj\Debug\FSUIPCClientExample_CSharp.Form1.resources

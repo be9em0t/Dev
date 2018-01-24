@@ -1,0 +1,79 @@
+/*@namespace url("http://www.mozilla.org/keymaster/gatekeeper/there.is.only.xul"); */
+
+/* change the height of the menus */
+
+menupopup > menu, 
+
+menupopup > menuitem,
+
+popup > menu, 
+
+popup > menuitem {
+   font-size: 15px !important;
+   font-weight: 400 !important;
+   height: 30px !important;            /* adjust this line for height */
+   
+   margin-top: 0px !important;
+
+   margin-bottom: 0px !important;
+
+   border-top: 0px !important;
+
+   border-bottom: 0px !important;
+
+   padding-top: 0px !important;
+
+   padding-bottom: 0px !important; }
+
+
+/* bookmark bar */
+#personal-bookmarks .bookmark-item > .toolbarbutton-text { font-size:15px !important; font-weight:400; }
+
+
+/* bookmarks main menu height */
+
+menu.bookmark-item {
+   font-size: 15px !important;
+   font-weight: 400 !important;
+   height: 30px !important;            /* adjust this line for height */
+
+   margin-top: 0px !important;
+
+   margin-bottom: 0px !important;
+
+   border-top: 0px !important;
+
+   border-bottom: 0px !important;
+
+   padding-top: 0px !important;
+
+   padding-bottom: 0px !important; }
+
+
+
+/* bookmarks menu > popup menu height */
+
+menuitem.bookmark-item {
+   font-size: 15px !important;
+   font-weight: 400 !important;
+   height: 30px !important;            /* adjust this line for height */
+
+   margin-top: 0px !important;
+
+   margin-bottom: 0px !important;
+
+   border-top: 0px !important;
+
+   border-bottom: 0px !important;
+
+   padding-top: 0px !important;
+
+   padding-bottom: 0px !important; }
+
+/* change the height of the menu separators */
+
+menuseparator {
+
+   margin-top: 3px !important;
+
+   margin-bottom: 3px !important; }

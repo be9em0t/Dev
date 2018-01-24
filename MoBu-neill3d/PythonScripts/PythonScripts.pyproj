@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{721ba175-3428-40c6-8339-85907a17e714}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>MakeCircle.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+    <InterpreterVersion />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+    <PtvsTargetsFile>$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets</PtvsTargetsFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="Animation\AdditiveAnimation.py" />
+    <Compile Include="Animation\AdditiveAnimation_2014.py" />
+    <Compile Include="Animation\CharTimeToZero.py" />
+    <Compile Include="Animation\CutLeft.py" />
+    <Compile Include="Animation\CutRight.py" />
+    <Compile Include="Animation\FinalizeOnSkeleton.py" />
+    <Compile Include="Animation\MoveCharToZero.py" />
+    <Compile Include="Animation\ReCreateRig.py" />
+    <Compile Include="Animation\ReStructuring.py" />
+    <Compile Include="Animation\ReStructuring2013.py" />
+    <Compile Include="Animation\StayOnFloor.py" />
+    <Compile Include="Animation\StayOnFloor_2012.py" />
+    <Compile Include="Animation\StayOnFloor_2013.py" />
+    <Compile Include="HUDext\CreateHUDRectSlider.py" />
+    <Compile Include="HUDext\HUDextUI.py" />
+    <Compile Include="ImportExport\bvh.py" />
+    <Compile Include="ImportExport\BVH_Tool.py" />
+    <Compile Include="MakeCircle.py" />
+    <Compile Include="SceneManagment\ConnectRelationNodes.py" />
+    <Compile Include="SceneManagment\handlefinish.py" />
+    <Compile Include="SceneManagment\handlestart.py" />
+    <Compile Include="SceneManagment\renamer.py" />
+    <Compile Include="SceneManagment\renamer2010.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Animation" />
+    <Folder Include="HUDext" />
+    <Folder Include="ImportExport" />
+    <Folder Include="SceneManagment" />
+  </ItemGroup>
+  <Import Project="$(PtvsTargetsFile)" Condition="Exists($(PtvsTargetsFile))" />
+  <Import Project="$(MSBuildToolsPath)\Microsoft.Common.targets" Condition="!Exists($(PtvsTargetsFile))" />
+</Project>

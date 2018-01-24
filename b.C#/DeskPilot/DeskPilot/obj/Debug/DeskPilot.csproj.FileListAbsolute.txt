@@ -1,0 +1,14 @@
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\bin\Debug\DeskPilot.exe.config
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\bin\Debug\DeskPilot.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\bin\Debug\DeskPilot.pdb
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.csprojResolveAssemblyReference.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\MainWindow.g.cs
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\App.g.cs
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot_MarkupCompile.cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot_MarkupCompile.lref
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\MainWindow.baml
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.g.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.Properties.Resources.resources
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.csproj.GenerateResource.Cache
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.exe
+C:\Work\OneDrive\Work\Visual Studio\b.C#\DeskPilot\DeskPilot\obj\Debug\DeskPilot.pdb
