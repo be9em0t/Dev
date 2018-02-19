@@ -247,7 +247,7 @@ root.geometry("300x400")
 
 e1 = Tkinter.Entry(root)
 #e1.insert(Tkinter.END, "BaseName (mys_ktn_2015)")
-e1.insert(Tkinter.END, "cou_cit_2017")
+e1.insert(Tkinter.END, "cou_cit_2018")
 e1.focus_set()
 e1.pack(fill=Tkinter.X)
 
