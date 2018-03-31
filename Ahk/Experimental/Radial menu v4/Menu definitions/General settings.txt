@@ -1,0 +1,30 @@
+﻿;==================================================================
+[General]
+RMSelectMethod =	click
+RMShowHotkey =		`  
+; RMShowHotkey =		RButton
+RMShowMethod =		300
+RSMShowHotkey =	LButton
+
+Sounds=			0
+MainMenuShowPos=	under mouse
+RMProcessPriority = 	Normal
+ExploreKey = 		Control
+TrayDoubleClick=		Suspend
+CreateShortcut =		1
+ShowTooltips =		1
+AutoSubmenuMarking = 	1
+RunSoundPlayers =	1
+CenterMouseOnSubmenuOpen =	1
+AutoCheckForUpdates =	RM AHK
+
+
+;==================================================================
+[FileExtensions]
+ahk = RM\Radial menu.exe
+
+
+
+;==================================================================
+[SkinOverride]
+

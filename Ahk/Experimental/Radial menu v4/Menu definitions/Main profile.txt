@@ -1,0 +1,95 @@
+﻿[Item1]
+Text=	Apps
+Icon=	
+Action=	
+Tooltip=	Applications
+Submenu=	Applications
+
+[Item2]
+Text=	
+Icon=	Ahk.png
+Action=	
+Tooltip=	AHK scripts
+Submenu=	Scripts
+
+[Item3]
+Text=	Menu control
+Icon=	
+Action=	explore RM\
+Submenu=	Menu control
+
+[Item4]
+Text=	
+Icon=	Windows explorer.png
+Action=	%A_WinDir%\explorer.exe
+Submenu=	Folders
+
+[Item5]
+Text=	Comp control
+Icon=	
+Action=	
+Submenu=	Comp control
+
+[Item6]
+Text=	
+Icon=	Files.png
+Action=	
+Submenu=	Files
+
+[Item8]
+Text=	item
+Icon=	
+Action=	
+
+[Item9]
+Text=	item
+Icon=	
+Action=	
+
+[Item10]
+Text=	item
+Icon=	
+Action=	
+
+[Item11]
+Text=	item
+Icon=	
+Action=	
+
+[Item12]
+Text=	item
+Icon=	
+Action=	
+
+[Item14]
+Text=	item
+Icon=	
+Action=	
+
+[Item15]
+Text=	item
+Icon=	
+Action=	
+
+[Item16]
+Text=	item
+Icon=	
+Action=	
+
+[Item17]
+Text=	item
+Icon=	
+Action=	
+
+[Item18]
+Text=	Chromium
+Icon=	
+Action=	C:\Ketarin\Data\Chromium\chrlauncher.exe
+
+;====================================================
+[General]
+CentralText=	RM4
+
+;====================================================
+[Navigator]
+Name=	Example navigator

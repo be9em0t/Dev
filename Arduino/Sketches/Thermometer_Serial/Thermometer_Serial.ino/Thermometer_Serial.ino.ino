@@ -25,7 +25,7 @@ void loop() {
     // take 10 samples from the MCP9700
     for (sample = 0; sample < 10; sample++) {
         // convert A0 value to temperature
-        temperature = ((float)analogRead(A0) * 5.0 / 1024.0) - 0.5;
+        temperature = ((float)analogRead(A0) * 5.0 / 1024.0) - 0.58;
         temperature = temperature / 0.01;
         // sample every 0.1 seconds
         delay(100);
@@ -39,5 +39,3 @@ void loop() {
     Serial.println(" deg. C");
     ten_samples = 0.0;
 }
-
-
