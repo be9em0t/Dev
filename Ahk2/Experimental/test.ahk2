@@ -1,5 +1,0 @@
-; test
-Gui := GuiCreate()
-Gui.Add("Text",, "Please enter your name:")
-Gui.AddEdit("vName")
-Gui.Show

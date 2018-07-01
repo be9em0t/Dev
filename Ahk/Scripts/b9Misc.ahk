@@ -1,5 +1,6 @@
 ; #NoTrayIcon
 Menu, Tray, Icon, %A_ScriptDir%\b9MiscRes\P-icon.ico, 0
+Menu, Tray, Tip, LangSwitch - CapsLock `nTransp - Shift+Win+W `nTopmost - Shift+Win+T `nTraymin - Win+H `nScreenCap - Win+Ins 
 #NoEnv  ; Recommended for performance and compatibility with future AutoHotkey releases.
 #Warn  ; Enable warnings to assist with detecting common errors.
 #SingleInstance force
@@ -8,7 +9,14 @@ SetWorkingDir %A_ScriptDir%  ; Ensures a consistent starting directory.
 ; CoordMode, Pixel, Screen
 CoordMode, Mouse, Screen
 
-#include c:\Work\OneDrive\Dev\Ahk\Includes\ToolTipOpt.ahk
+; Verify the correct path to include scripts
+; #Include d:\Work\OneDrive\Dev\Ahk\Includes 
+#Include %A_ScriptDir%\Includes
+#IncludeAgain ToolTipOpt.ahk
+
+
+; Run c:\Work\OneDrive\Dev\Ahk\Experimental\TrayMin\traymin.ahk
+;ExitApp 
 
 global MouseX, MouseY
 global PopUIw := 96, PopUIh := 96
@@ -16,6 +24,7 @@ global PopOffsetX := PopUIw//2 , PopOffsetY := PopUIh//2
 global TimerHide := 1200, AnimSpeed := 40, AnimSteps := 4
 global CustomColor := "Fuchsia"  ; Can be any RGB color (it will be made transparent below).
 global LangName
+global TranspWin := 150
 
 MouseTipUpdateInterval := 10
 
@@ -47,6 +56,20 @@ f15:: ; Switch Lnguages. (Need to set Capslock to F15 firs)
   Sleep, 20
   LanguageTip()
 Return
+
+; Block weird Win-keyboard hotkeys
+^#space::
+
+^+#space::
+return
+
++#W::
+  Gosub ToggleTranspWin
+return
+
++#T::
+  GoSub ToggleTopmost
+return
 
 ; Prepare PopupMainUI
 popupUIPrepare:
@@ -131,9 +154,9 @@ Else if (A_ThisMenuItem = "WindowInfo"){
   MsgBox, "Scriptdir: " %A_ScriptDir% "Script HWIND abd Name" %A_ScriptHwnd% %A_ScriptName%
 }
 Else if (A_ThisMenuItem = "AHK Help"){
-  SplitPath, A_AhkPath,, helpPath
-  helpPath = %helpPath%\AutoHotkey.chm
-  Run %helpPath%
+  ; SplitPath, A_AhkPath,, helpPath
+  ; helpPath = %helpPath%\AutoHotkey.chm
+  Run https://autohotkey.com/docs/AutoHotkey.htm
 }
 Else if (A_ThisMenuItem = "Edit Script"){
   Run Code.exe %A_ScriptFullPath%
@@ -147,6 +170,18 @@ Else if (A_ThisMenuItem = "Quit") {
 Else {
   MsgBox Command not found.
 }
+return
+
+ToggleTranspWin:
+  WinGet, currentTransparency, Transparent, A
+  if (currentTransparency = 150)
+    {
+      WinSet, Transparent, OFF, A
+    }
+  else
+    {
+      WinSet, Transparent, 150, A
+    }
 return
 
 ShowUIFade:
@@ -223,6 +258,26 @@ ActivateWinUM:
   MouseGetPos,,, WinUMID
   WinActivate, ahk_id %WinUMID%
 return
+
+ToggleTopmost:
+  WinGet, currentWindow, ID, A
+  WinGet, ExStyle, ExStyle, ahk_id %currentWindow%
+  if (ExStyle & 0x8)  ; 0x8 is WS_EX_TOPMOST.
+  {
+    Winset, AlwaysOnTop, off, ahk_id %currentWindow%
+    SplashImage,, x0 y0 b fs12, OFF always on top.
+    Sleep, 1500
+    SplashImage, Off
+  }
+  else
+  {
+    WinSet, AlwaysOnTop, on, ahk_id %currentWindow%
+    SplashImage,,x0 y0 b fs12, ON always on top.
+    Sleep, 1500
+    SplashImage, Off
+  }
+return
+
 
 ; === LANGUAGE ROUTINES ===
 ; Language list - leave empty string to disable tooltip
@@ -385,7 +440,7 @@ LangShowMouseTip:
   MouseGetPos, xpos, ypos
   ; ToolTip, %xpos% %ypos%
   ToolTipColor("Red", "Black")
-  ToolTip, %LangName% , xpos + 20, ypos - 30
+  ToolTip, %LangName% ;, xpos + 20, ypos - 30
 return
 
 LangHideMouseTip:
