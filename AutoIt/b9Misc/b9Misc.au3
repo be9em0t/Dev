@@ -3,14 +3,77 @@
 #include <WinAPI.au3>
 #include <WindowsConstants.au3>
 #include <MsgBoxConstants.au3>
-#include <Array.au3>
-#include <ButtonConstants.au3>
+; #include <ButtonConstants.au3>
+; #include <Array.au3>
+#include <GuiMenu.au3>
+#include <WinAPIError.au3>
 
+#include <APILocaleConstants.au3>
+#include <APISysConstants.au3>
+#include <StaticConstants.au3>
+#include <WinAPILocale.au3>
+#include <WinAPISys.au3>
+
+Opt('GUIOnEventMode', 1)
+Opt("TrayMenuMode", 3)
+    
 Global Const $AC_SRC_ALPHA = 1
 Global $hGUIbg, $hGUIbuttA, $hGUIbuttB, $hGUIbuttC, $hGUIbuttD, $g_hImage
 ; AutoItSetOption ( "GUICoordMode", 0)
 
-Local $posX = -1, $posY = -1, $iTransBG=20
+Local $fScripVersion = .2
+Local $posX = -1, $posY = -1, $iTransBG=20 ; TODO: transparency of PopUp
+Local $sIconTray = @ScriptDir & "\Resources\P-icon.ico"
+TraySetToolTip("b9Misc AutoIt, ver. " & $fScripVersion) ; Set the tray menu tooltip with information about the icon index.
+TraySetIcon($sIconTray, 0) ; Set the tray menu icon using the shell32.dll and the random index number.
+
+; ===============================================================================================================================
+; NOTE: Hotkeys
+; ===============================================================================================================================
+
+HotKeySet("#`", "ShowGUI") ; Win+` - PopUI
+
+HotKeySet("^!d", "langKbdNext") ;  - Next Keyboard Layout
+HotKeySet("!#{F2}", "langKbdPrev") ;  - Next Keyboard Layout
+
+; #Ins:: ; Win+Ins - Window Capture
+  ; Run, "c:\Ketarin\Design\Xnview\XnView\xnview.exe" "-capture=window"
+; !#Ins:: ; Alt+Win+Ins - FullScreen Capture
+  ; Run, "c:\Ketarin\Design\Xnview\XnView\xnview.exe" "-capture=desktop"
+;^#Ins::send {LWinDown}}{ShiftDown}s{ShiftUp}{LWinUp} ; Shift+Win+Ins - SnippingTool Window Capture
+  ; Run, "c:\Windows\System32\SnippingTool.exe /clip"
+
+;f15:: ; Capslock - Switch Lnguages. (Need to set Capslock to F15 first)
+; Block weird Win-keyboard hotkeys: Ctrl+Win+Space, Ctrl+Shift+Win+Space
+;+#W:: ; Toggle Trasnparent Win
+;+#T:: ; Toggle Topmost
+
+While 1
+    Sleep(100)
+WEnd
+
+; === LANGUAGE KBD LAYOUT FUNCTIONS ====
+Func langKbdNext()
+		_WinAPI_ActivateKeyboardLayout($HKL_NEXT)
+EndFunc
+
+Func langKbdPrev()
+		_WinAPI_ActivateKeyboardLayout($HKL_PREV)
+EndFunc
+
+Func ShowGUI()
+	$iWinExists = WinExists ( $hGUIbg )
+	If NOT $hGUIbg Then
+		; MsgBox($MB_SYSTEMMODAL, "", " GUIbg null " & $iWinExists & " " & $hGUIbg)
+		GUIPopBuild()
+	ElseIf $iWinExists == 0 Then
+		; MsgBox($MB_SYSTEMMODAL, "", " GUIbg but WinExists=0 " & $iWinExists & " " & $hGUIbg)
+		GUIPopBuild()
+	EndIf
+					; MsgBox($MB_OK, "", $posX & " | " & $posY)
+
+EndFunc	; ==> ShowGUI
+
 
 ; ===============================================================================================================================
 ; PopupGUI
@@ -26,6 +89,10 @@ Local $posX = -1, $posY = -1, $iTransBG=20
 	$pngSrcBG = @ScriptDir & "\bg.png"
 
 Func GUIPopBuild()
+Local $aMPos = MouseGetPos()
+$posX = $aMPos[0]
+$posY = $aMPos[1]
+
 	_GDIPlus_Startup()
 	; ; button images - must be the same size
 	; $pngSrcA = @ScriptDir & "\Icon1.png"
@@ -76,6 +143,8 @@ Func GUIPopBuild()
 	; Create button child GUIs
 	$hGUIbuttA = GUICreate("ButtonA", $iWidth, $iHeight, ($aWinGetPos[0]+1), ($aWinGetPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
 	SetBitmap($hGUIbuttA, $hImageA, 255)
+	Global $ContextA = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
+	ContextMenuA()
 	GUISetState()
 
 	$hGUIbuttB = GUICreate("ButtonB", $iWidth, $iHeight, ($aWinGetPos[0]+$iWidth+2), ($aWinGetPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
@@ -84,10 +153,14 @@ Func GUIPopBuild()
 
 	$hGUIbuttC = GUICreate("ButtonC", $iWidth, $iHeight, ($aWinGetPos[0]+1), ($aWinGetPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
 	SetBitmap($hGUIbuttC, $hImageC, 255)
+	Global $ContextC = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
+	ContextMenuC()
 	GUISetState()
 
 	$hGUIbuttD = GUICreate("ButtonD", $iWidth, $iHeight, ($aWinGetPos[0]+$iWidth+2), ($aWinGetPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
 	SetBitmap($hGUIbuttD, $hImageD, 255)
+	Global $ContextD = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
+	ContextMenuD()
 	GUISetState()
 
 	; GUIRegisterMsg($WM_LBUTTONDBLCLK, "WM_LBUTTONDBLCLK")
@@ -98,6 +171,12 @@ Func GUIPopBuild()
 				GUIDelete($hGUIbg)
 				Return
 			EndIf	
+
+			$iWinExists = WinExists ( $hGUIbg )
+			If $iWinExists == 0 Then
+				GUIDelete($hGUIbg)
+				Return
+			EndIf
 
 			$aCurInf = GUIGetCursorInfo($hGUIbg)
 
@@ -141,101 +220,137 @@ Func GUIPopBuild()
 	_GDIPlus_Shutdown()
 EndFunc ; => GUIPopBuild
 
-
 ; ===============================================================================================================================
-; Hotkeys
-; ===============================================================================================================================
-
-HotKeySet("+!`", "ShowGUI") ; Shift-Alt-`
-
-While 1
-    Sleep(100)
-WEnd
-
-Func ShowGUI()
-	$iWinExists = WinExists ( $hGUIbg )
-	If NOT $hGUIbg Then
-		; MsgBox($MB_SYSTEMMODAL, "", " GUIbg null " & $iWinExists & " " & $hGUIbg)
-		GUIPopBuild()
-	ElseIf $iWinExists == 0 Then
-		; MsgBox($MB_SYSTEMMODAL, "", " GUIbg but WinExists=0 " & $iWinExists & " " & $hGUIbg)
-		GUIPopBuild()
-	EndIf
-EndFunc	; ==> ShowGUI
-
-; Func HotKeyPressed()
-;     Switch @HotKeyPressed ; The last hotkey pressed.
-;         ; Case "{PAUSE}" ; String is the {PAUSE} hotkey.
-;         ;     $g_bPaused = Not $g_bPaused
-;         ;     While $g_bPaused
-;         ;         Sleep(100)
-;         ;         ToolTip('Script is "Paused"', 0, 0)
-;         ;     WEnd
-;         ;     ToolTip("")
-
-;         ; Case "{ESC}" ; String is the {ESC} hotkey.
-;         ;     Exit
-
-;         Case "+!`" ; String is the Shift-Alt-` hotkey.
-;             MsgBox($MB_SYSTEMMODAL, "", "This is a message.")
-; 						GUIShow()
-
-;     EndSwitch
-; EndFunc   ;==>HotKeyPressed
-
-; ===============================================================================================================================
-; Functions
+; NOTE: Functions 
 ; ===============================================================================================================================
 
+; === LEFT MOUSE CLICK FUNCTIONS ===
+Func WM_LBUTTONDOWN($hWnd, $iMsg, $iParam, $lParam)
+	#forceref $hWnd, $iMsg, $iParam, $lParam  	
+	Switch $hWnd
+		Case $hGUIbuttA
+					TrackPopupMenu($hGUIbuttA, GUICtrlGetHandle($ContextA), MouseGetPos(0), MouseGetPos(1))
+		Case $hGUIbuttB
+				; Normally should not fire because of our WM_COMMAND function
+				; MsgBox($MB_SYSTEMMODAL, "Info", "Button B pressed")
+				Local $iPID = ShellExecute("C:\Ketarin\Tools\KeePass\KeePass.exe", "")  				; TODO: bring to front if already open
+				; ToolTip($iPID)
+		Case $hGUIbuttC
+				; MsgBox($MB_SYSTEMMODAL, "Info", "Button C pressed")
+				TrackPopupMenu($hGUIbuttC, GUICtrlGetHandle($ContextC), MouseGetPos(0), MouseGetPos(1))
+		Case $hGUIbuttD
+					TrackPopupMenu($hGUIbuttD, GUICtrlGetHandle($ContextD), MouseGetPos(0), MouseGetPos(1))
+	EndSwitch
+EndFunc ;==> WM_LBUTTONDOWN
+
+; === CONTEXT MENU FUNCTIONS ====
+Func TrackPopupMenu($hWnd, $hMenu, $x, $y)
+    DllCall("user32.dll", "int", "TrackPopupMenuEx", "hwnd", $hMenu, "int", 0, "int", $x, "int", $y, "hwnd", $hWnd, "ptr", 0)
+EndFunc   ;==>TrackPopupMenu
+
+; --- ContextMenu A menu functions---
+Func ContextMenuA()
+	; Global $Context = GUICtrlCreateContextMenuA(GUICtrlCreateDummy()) ; this should attach to respective GUI
+	Global $mnuEmailOutlook = GUICtrlCreateMenuItem("be9em0t &Outlook", $ContextA)
+	GUICtrlSetOnEvent(-1, '_MenuBgmOutlook')
+	Global $mnuEmailGmail = GUICtrlCreateMenuItem("be9em0t &Gmail", $ContextA)
+	GUICtrlSetOnEvent(-1, '_MenuBgmGmail')
+	Global $mnuKeta = GUICtrlCreateMenuItem("&Keta", $ContextA)
+	GUICtrlSetOnEvent(-1, '_MenuKeta')
+EndFunc
+
+Func _MenuBgmOutlook()
+	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	MsgBox($MB_OK, "AutoIt", "fill begemot")
+		GUIDelete($hGUIbg)
+EndFunc
+Func _MenuBgmGmail()
+	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	MsgBox($MB_OK, "AutoIt", "fill gmail")
+		GUIDelete($hGUIbg)
+EndFunc
+Func _MenuKeta()
+	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	MsgBox($MB_OK, "AutoIt", "fill keta")
+		GUIDelete($hGUIbg)
+EndFunc
+
+; --- ContextMenu C menu functions---
+Func ContextMenuC()
+	; Global $Context = GUICtrlCreateContextMenuA(GUICtrlCreateDummy()) ; this should attach to respective GUI
+	Global $mnuActivate = GUICtrlCreateMenuItem("Window Activate", $ContextC)
+	GUICtrlSetOnEvent(-1, '_MenuActivate')
+	; Rollup
+	; TrayMin
+	; OnTop
+	; NotOnTop
+	; Window Resize >
+	; 	> Set Capture BG
+	; 	> Restore Background
+EndFunc
+
+Func _MenuActivate()
+	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	MsgBox($MB_OK, "AutoIt", "Window Activate")
+		GUIDelete($hGUIbg)
+EndFunc
+
+; --- ContextMenu D menu functions---
+Func ContextMenuD()
+	Global $mnuTest = GUICtrlCreateMenuItem("&Test", $ContextD)
+		GUICtrlSetOnEvent(-1, '_MenuTest')
+	Global $mnuSeparator = GUICtrlCreateMenuItem("", $ContextD) ; Create a separator line
+			Global $submenuScript = GUICtrlCreateMenu("S&cript", $ContextD) ; Is created before "?" menu
+			; Global $submnuTest1 = GUICtrlCreateMenuItem("Test1", $submenuStart)
+			Global $mnuAu3Info = GUICtrlCreateMenuItem("&Au3Info", $submenuScript)
+				GUICtrlSetOnEvent(-1, '_MenuAu3Info')
+			; Global $mnuSubmenu = GUICtrlCreateMenuItem("&Exit", $ContextD)
+			Global $mnuHelp = GUICtrlCreateMenuItem("AutoIt &Help", $submenuScript)
+				GUICtrlSetOnEvent(-1, '_MenuAutoItHelp')
+			Global $mnuEditScript = GUICtrlCreateMenuItem("&Edit Script", $submenuScript)
+				GUICtrlSetOnEvent(-1, '_MenuEditScript')
+			; Global $mnuReloadScript = GUICtrlCreateMenuItem("&Exit", $ContextD)
+	Global $mnuSeparator = GUICtrlCreateMenuItem("", $ContextD) ; Create a separator line
+	Global $mnuQuit = GUICtrlCreateMenuItem("&Quit", $ContextD)
+	GUICtrlSetOnEvent(-1, '_MenuQuit')
+EndFunc ;==> ContextMenuD Gui
+
+Func _MenuTest()
+	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	MsgBox($MB_OK, "AutoIt", @ScriptDir)
+		GUIDelete($hGUIbg)
+EndFunc
+
+Func _MenuAu3Info()
+	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+		GUIDelete($hGUIbg)
+EndFunc
+
+Func _MenuAutoItHelp()
+	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\AutoIt.chm", "c:\Ketarin\Tools\AutoIt\")
+		GUIDelete($hGUIbg)
+EndFunc
+
+Func _MenuEditScript()
+	Local $iPID = ShellExecute("c:\Ketarin\Data\VSCode\Code.exe", "d:\Work\OneDrive\Dev\AutoIt\b9Misc\b9Misc.au3")
+		GUIDelete($hGUIbg)
+EndFunc
+
+Func _MenuQuit()
+		Exit ; TODO: ask yes no
+EndFunc
+
+; === OTHER FUNCTIONS ====
 Func OKButton()
     ; Note: At this point @GUI_CtrlId would equal $iOKButton
     MsgBox("GUI Event", "You selected OK!")
 EndFunc   ;==>OKButton
-
-; Func WM_NCHITTEST($hWnd, $iMsg, $iParam, $lParam)
-; 	#forceref $hWnd, $iMsg, $iParam, $lParam
-; 	If ($hWnd = $g_hGUI2) And ($iMsg = $WM_NCHITTEST) Then Return $HTCAPTION
-; EndFunc   ;==>WM_NCHITTEST
 
 ; Func WM_LBUTTONDBLCLK($hWnd, $iMsg, $iParam, $lParam)
 ; 	#forceref $hWnd, $iMsg, $iParam, $lParam
 ; 	; SetBitmap($g_hGUI2, $g_hImage, GUICtrlRead($g_idSlider))  
 ;   MsgBox($MB_OK, "Blah", "Icon!" + $hWnd)
 ; EndFunc   ;==>WM_HSCROLL
-
-; === Left Mouse Click ==============================================
-Func WM_LBUTTONDOWN($hWnd, $iMsg, $iParam, $lParam)
-	#forceref $hWnd, $iMsg, $iParam, $lParam
-  ; MsgBox($MB_OK, "NCLbutton", "Click! " & $hWnd)
-	; ToolTip("You are here" )
-  	
-	Switch $hWnd
-		Case $hGUIbuttA
-				MsgBox($MB_SYSTEMMODAL, "Info", "Button A pressed")
-				; GUISetState(@SW_HIDE, $hGUIbg)
-		Case $hGUIbuttB
-				; Normally should not fire because of our WM_COMMAND function
-				; MsgBox($MB_SYSTEMMODAL, "Info", "Button B pressed")
-				Local $iPID = Run("C:\Ketarin\Tools\KeePass\KeePass.exe", "")  				; TODO: bring to front if already open
-				; ToolTip($iPID)
-		Case $hGUIbuttC
-				; Normally should not fire because of our WM_COMMAND function
-				MsgBox($MB_SYSTEMMODAL, "Info", "Button C pressed")
-		Case $hGUIbuttD
-				; Normally should not fire because of our WM_COMMAND function
-				MsgBox($MB_SYSTEMMODAL, "Info", "Button D pressed")
-	EndSwitch
-EndFunc   ; ==> WM_LBUTTONDOWN
-
-; Func GUIShow()
-; 	GUISetState(@SW_SHOW, $hGUIbg)
-; EndFunc
-
-; Func GUIHide()
-; GUIDelete($hGUIbg)
-; 	; GUISetState(@SW_HIDE, $hGUIbg)
-; EndFunc
-
 
 ; ===============================================================================================================================
 ; SetBitMap Function
