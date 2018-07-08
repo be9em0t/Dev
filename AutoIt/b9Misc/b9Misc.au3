@@ -1,26 +1,17 @@
 #include <GDIPlus.au3>
-#include <GuiConstantsEx.au3>
-#include <WinAPI.au3>
 #include <WindowsConstants.au3>
+#include <GuiConstantsEx.au3>
 #include <MsgBoxConstants.au3>
-; #include <ButtonConstants.au3>
-; #include <Array.au3>
-#include <GuiMenu.au3>
-#include <WinAPIError.au3>
-
-#include <APILocaleConstants.au3>
-#include <APISysConstants.au3>
-#include <StaticConstants.au3>
-#include <WinAPILocale.au3>
-#include <WinAPISys.au3>
-
-#Include <HotKey.au3>
 #include <WinAPIvkeysConstants.au3>
+#include <HotKey.au3>
+
+#RequireAdmin
 
 Opt('GUIOnEventMode', 1)
 Opt("TrayMenuMode", 3)
     
 Global Const $AC_SRC_ALPHA = 1
+Global Const $iLanguage = 0x0409
 Global $hGUIbg, $hGUIbuttA, $hGUIbuttB, $hGUIbuttC, $hGUIbuttD, $g_hImage
 ; AutoItSetOption ( "GUICoordMode", 0)
 
@@ -40,17 +31,19 @@ $pngSrcD = @ScriptDir & "\Icon4.png"
 $pngSrcD1 = @ScriptDir & "\Icon4a.png"
 $pngSrcBG = @ScriptDir & "\bg.png"
 
+If Not IsAdmin() Then MsgBox($MB_SYSTEMMODAL, "", "The script needs admin rights.")
+; If IsAdmin() Then MsgBox($MB_SYSTEMMODAL, "", "The script running with admin rights.")
+
 ; ===============================================================================================================================
 ; NOTE: Hotkeys
 ; ===============================================================================================================================
 
-HotKeySet("#`", "ShowGUI") ; Win+` - PopUI
+; HotKeySet("#`", "ShowGUI") ; Win+` - PopUI
+; HotKeySet("#{F2}", "langNext") ; Win+` - PopUI
 
-; HotKeySet("^!d", "langKbdNext") ;  - Next Keyboard Layout
-; HotKeySet($VK_F15, "langNext") ;  - Next Keyboard Layout
-; _HotKeyAssign ( $iKey [, $sFunction [, $iFlags [, $sTitle]]] )
-
-; Assign "F12" with Message() and set extended function call
+; ; Assign Hotkey VirtualCode useng HotkeyUDF: https://autoit-script.ru/index.php?topic=296.0
+; ; Needs Admin Elevation to work everywhere
+_HotKey_Assign(BitOR($CK_WIN, $VK_OEM_3), "ShowGUI", BitOR($HK_FLAG_DEFAULT, $HK_FLAG_EXTENDEDCALL))
 _HotKey_Assign($VK_F15, "langNext", BitOR($HK_FLAG_DEFAULT, $HK_FLAG_EXTENDEDCALL))
 
 ; #Ins:: ; Win+Ins - Window Capture
@@ -70,17 +63,32 @@ While 1	; FIXME: need to cleanup all While-s
 WEnd
 
 ; === LANGUAGE KBD LAYOUT FUNCTIONS ====
-Func langNext($iKey) ; uses the Hotkey UDF
-  $hGUIlang = GUICreate("GuiLang", 48, 48, -1, -1, $WS_POPUP, $WS_EX_LAYERED)
+Func langNext() ; uses the Hotkey UDF
+  $hGUIlang = GUICreate("GuiLang", 48, 48, -1, -1, $WS_POPUP, $WS_EX_TOOLWINDOW)
   GUISetState(@SW_SHOW)
 
   _WinAPI_ActivateKeyboardLayout($HKL_NEXT)
 
+	; $allwindows = WinList()
+	; For $i = 1 to $allwindows[0][0]
+	; 		If IsVisible($allwindows[$i][1]) Then
+	; 		  _WinAPI_ActivateKeyboardLayout($HKL_NEXT)
+	; 		EndIf
+	; Next
+
   GUIDelete($hGUIlang)
 EndFunc
 
+; Func IsVisible($handle)
+;     If BitAnd( WinGetState($handle), 2 ) Then 
+;         Return 1
+;     Else
+;         Return 0
+;     EndIf
+; EndFunc
 
 Func ShowGUI()
+
 	$iWinExists = WinExists ( $hGUIbg )
 	If NOT $hGUIbg Then
 		; MsgBox($MB_SYSTEMMODAL, "", " GUIbg null " & $iWinExists & " " & $hGUIbg)
@@ -91,8 +99,9 @@ Func ShowGUI()
 	EndIf
 					; MsgBox($MB_OK, "", $posX & " | " & $posY)
 
-EndFunc	; ==> ShowGUI
+_WinAPI_SetKeyboardLayout($hGUIbg, $iLanguage)
 
+EndFunc	; ==> ShowGUI
 
 ; ===============================================================================================================================
 ; PopupGUI
@@ -176,7 +185,7 @@ $posY = $aMPos[1]
 	; GUIRegisterMsg($WM_LBUTTONDBLCLK, "WM_LBUTTONDBLCLK")
 	GUIRegisterMsg($WM_LBUTTONDOWN, "WM_LBUTTONDOWN")
 
-	While 1
+	While 1 ; FIXME: Add ESC option
 			If GUIGetMsg() = $GUI_EVENT_CLOSE then 
 				GUIDelete($hGUIbg)
 				Return
@@ -249,13 +258,16 @@ Func WM_LBUTTONDOWN($hWnd, $iMsg, $iParam, $lParam)
 				; MsgBox($MB_SYSTEMMODAL, "Info", "Button C pressed")
 				TrackPopupMenu($hGUIbuttC, GUICtrlGetHandle($ContextC), MouseGetPos(0), MouseGetPos(1))
 		Case $hGUIbuttD
-					TrackPopupMenu($hGUIbuttD, GUICtrlGetHandle($ContextD), MouseGetPos(0), MouseGetPos(1))
+				TrackPopupMenu($hGUIbuttD, GUICtrlGetHandle($ContextD), MouseGetPos(0), MouseGetPos(1))
 	EndSwitch
+	; GUIDelete($hGUIbg)
 EndFunc ;==> WM_LBUTTONDOWN
 
 ; === CONTEXT MENU FUNCTIONS ====
 Func TrackPopupMenu($hWnd, $hMenu, $x, $y)
     DllCall("user32.dll", "int", "TrackPopupMenuEx", "hwnd", $hMenu, "int", 0, "int", $x, "int", $y, "hwnd", $hWnd, "ptr", 0)
+		Sleep(30)
+		GUIDelete($hGUIbg)
 EndFunc   ;==>TrackPopupMenu
 
 ; --- ContextMenu A menu functions---
@@ -272,17 +284,14 @@ EndFunc
 Func _MenuBgmOutlook()
 	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
 	MsgBox($MB_OK, "AutoIt", "fill begemot")
-		GUIDelete($hGUIbg)
 EndFunc
 Func _MenuBgmGmail()
 	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
 	MsgBox($MB_OK, "AutoIt", "fill gmail")
-		GUIDelete($hGUIbg)
 EndFunc
 Func _MenuKeta()
 	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
 	MsgBox($MB_OK, "AutoIt", "fill keta")
-		GUIDelete($hGUIbg)
 EndFunc
 
 ; --- ContextMenu C menu functions---
@@ -302,7 +311,6 @@ EndFunc
 Func _MenuActivate()
 	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
 	MsgBox($MB_OK, "AutoIt", "Window Activate")
-		GUIDelete($hGUIbg)
 EndFunc
 
 ; --- ContextMenu D menu functions---
@@ -328,22 +336,19 @@ EndFunc ;==> ContextMenuD Gui
 Func _MenuTest()
 	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
 	MsgBox($MB_OK, "AutoIt", @ScriptDir)
-		GUIDelete($hGUIbg)
 EndFunc
 
 Func _MenuAu3Info()
 	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
-		GUIDelete($hGUIbg)
+
 EndFunc
 
 Func _MenuAutoItHelp()
 	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\AutoIt.chm", "c:\Ketarin\Tools\AutoIt\")
-		GUIDelete($hGUIbg)
 EndFunc
 
 Func _MenuEditScript()
 	Local $iPID = ShellExecute("c:\Ketarin\Data\VSCode\Code.exe", "d:\Work\OneDrive\Dev\AutoIt\b9Misc\b9Misc.au3")
-		GUIDelete($hGUIbg)
 EndFunc
 
 Func _MenuQuit()
