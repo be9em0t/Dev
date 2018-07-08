@@ -14,6 +14,9 @@
 #include <WinAPILocale.au3>
 #include <WinAPISys.au3>
 
+#Include <HotKey.au3>
+#include <WinAPIvkeysConstants.au3>
+
 Opt('GUIOnEventMode', 1)
 Opt("TrayMenuMode", 3)
     
@@ -27,14 +30,28 @@ Local $sIconTray = @ScriptDir & "\Resources\P-icon.ico"
 TraySetToolTip("b9Misc AutoIt, ver. " & $fScripVersion) ; Set the tray menu tooltip with information about the icon index.
 TraySetIcon($sIconTray, 0) ; Set the tray menu icon using the shell32.dll and the random index number.
 
+$pngSrcA = @ScriptDir & "\Icon1.png"
+$pngSrcA1 = @ScriptDir & "\Icon1a.png"
+$pngSrcB = @ScriptDir & "\Icon2.png"
+$pngSrcB1 = @ScriptDir & "\Icon2a.png"
+$pngSrcC = @ScriptDir & "\Icon3.png"
+$pngSrcC1 = @ScriptDir & "\Icon3a.png"
+$pngSrcD = @ScriptDir & "\Icon4.png"
+$pngSrcD1 = @ScriptDir & "\Icon4a.png"
+$pngSrcBG = @ScriptDir & "\bg.png"
+
 ; ===============================================================================================================================
 ; NOTE: Hotkeys
 ; ===============================================================================================================================
 
 HotKeySet("#`", "ShowGUI") ; Win+` - PopUI
 
-HotKeySet("^!d", "langKbdNext") ;  - Next Keyboard Layout
-HotKeySet("!#{F2}", "langKbdPrev") ;  - Next Keyboard Layout
+; HotKeySet("^!d", "langKbdNext") ;  - Next Keyboard Layout
+; HotKeySet($VK_F15, "langNext") ;  - Next Keyboard Layout
+; _HotKeyAssign ( $iKey [, $sFunction [, $iFlags [, $sTitle]]] )
+
+; Assign "F12" with Message() and set extended function call
+_HotKey_Assign($VK_F15, "langNext", BitOR($HK_FLAG_DEFAULT, $HK_FLAG_EXTENDEDCALL))
 
 ; #Ins:: ; Win+Ins - Window Capture
   ; Run, "c:\Ketarin\Design\Xnview\XnView\xnview.exe" "-capture=window"
@@ -48,18 +65,20 @@ HotKeySet("!#{F2}", "langKbdPrev") ;  - Next Keyboard Layout
 ;+#W:: ; Toggle Trasnparent Win
 ;+#T:: ; Toggle Topmost
 
-While 1
+While 1	; FIXME: need to cleanup all While-s
     Sleep(100)
 WEnd
 
 ; === LANGUAGE KBD LAYOUT FUNCTIONS ====
-Func langKbdNext()
-		_WinAPI_ActivateKeyboardLayout($HKL_NEXT)
+Func langNext($iKey) ; uses the Hotkey UDF
+  $hGUIlang = GUICreate("GuiLang", 48, 48, -1, -1, $WS_POPUP, $WS_EX_LAYERED)
+  GUISetState(@SW_SHOW)
+
+  _WinAPI_ActivateKeyboardLayout($HKL_NEXT)
+
+  GUIDelete($hGUIlang)
 EndFunc
 
-Func langKbdPrev()
-		_WinAPI_ActivateKeyboardLayout($HKL_PREV)
-EndFunc
 
 Func ShowGUI()
 	$iWinExists = WinExists ( $hGUIbg )
@@ -78,15 +97,6 @@ EndFunc	; ==> ShowGUI
 ; ===============================================================================================================================
 ; PopupGUI
 ; ===============================================================================================================================
-	$pngSrcA = @ScriptDir & "\Icon1.png"
-	$pngSrcA1 = @ScriptDir & "\Icon1a.png"
-	$pngSrcB = @ScriptDir & "\Icon2.png"
-	$pngSrcB1 = @ScriptDir & "\Icon2a.png"
-	$pngSrcC = @ScriptDir & "\Icon3.png"
-	$pngSrcC1 = @ScriptDir & "\Icon3a.png"
-	$pngSrcD = @ScriptDir & "\Icon4.png"
-	$pngSrcD1 = @ScriptDir & "\Icon4a.png"
-	$pngSrcBG = @ScriptDir & "\bg.png"
 
 Func GUIPopBuild()
 Local $aMPos = MouseGetPos()

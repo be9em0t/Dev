@@ -1,0 +1,22 @@
+// Welcome to Framer
+
+// This is just demo code. Feel free to delete it all.
+imageLayer = new Layer({x:0, y:0, width:128, height:128, image:"images/Icon.png"})
+imageLayer.center()
+
+// Define a set of states with names (the original state is 'default')
+imageLayer.states = {
+	second: {y:100, scale:0.6, rotationZ:300},
+	third:  {y:300, scale:1},
+	fourth:	{y:200, scale:0.9, rotationZ:200}
+}
+
+// Set the default animation options
+imageLayer.animationOptions = {
+	curve: "spring(50,12,0)"
+}
+
+// On a click, go to the next state
+imageLayer.on(Events.Click, function() {
+	imageLayer.stateCycle()
+})
