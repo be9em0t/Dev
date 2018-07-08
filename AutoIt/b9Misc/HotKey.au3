@@ -6,7 +6,7 @@
 	Filename:		HotKey.au3
 	Description:	Sets a hot key that calls a user function
 	Author:			Yashied
-	Version:		1.8
+	Version:		2.1b
 	Requirements:	AutoIt v3.3 +, Developed/Tested on WindowsXP Pro Service Pack 2
 	Uses:			StructureConstants.au3, WinAPI.au3, WindowsConstants.au3
 	Notes:			The library registers the following window message:
@@ -23,7 +23,7 @@
 
 	Example1:
 
-		#Include <HotKey.au3>
+		#Include <HotKey_21b.au3>
 
 		Global Const $VK_ESCAPE = 0x1B
 		Global Const $VK_F12 = 0x7B
@@ -48,7 +48,7 @@
 
 	Example2:
 
-		#Include <HotKey.au3>
+		#Include <HotKey_21b.au3>
 
 		Global Const $VK_OEM_PLUS = 0xBB
 		Global Const $VK_OEM_MINUS = 0xBD
@@ -125,9 +125,11 @@
 ; with one parameter (see _HotKey_Assign()).
 ; Only the _HotKey_Assign() function uses this flag.
 
-; $HK_FLAG_WAIT
-; Forces wait to return the user function inside the hook procedure. When using this flag, $HK_FLAG_NOOVERLAPCALL does not make sense. This flag is
-; used mainly for compatibility with the library version 1.5 and below. In most cases, it is not required.
+; $HK_FLAG_POSTCALL
+; Calls a user function after a hot key has been released. If the hot key has been released, 16-bit hot key code will be pass as a parameter to the
+; user function as a negative value. When using this flag, you should check the passed value inside the specified function. If the value is negative,
+; the hot key was released, and vice versa. Otherwise, it will be twice the function call: when you pressing and releasing the hot key. If the flag was
+; set, the function must have the header same as when using a $HK_FLAG_EXTENDEDCALL flag. Workes only if $HK_FLAG_EXTENDEDCALL flag has been set.
 ; Only the _HotKey_Assign() function uses this flag.
 
 ; $HK_FLAG_DEFAULT
@@ -139,7 +141,8 @@ Global Const $HK_FLAG_NOOVERLAPCALL = 0x0004
 Global Const $HK_FLAG_NOREPEAT = 0x0008
 Global Const $HK_FLAG_NOERROR = 0x0010
 Global Const $HK_FLAG_EXTENDEDCALL = 0x0040
-Global Const $HK_FLAG_WAIT = 0x0080
+;~Global Const $HK_FLAG_WAIT = 0x0080
+Global Const $HK_FLAG_POSTCALL = 0x0100
 Global Const $HK_FLAG_DEFAULT = BitOR($HK_FLAG_NOOVERLAPCALL, $HK_FLAG_NOREPEAT)
 
 Global Const $CK_SHIFT = 0x0100
@@ -157,33 +160,33 @@ Global Const $HK_WM_ACTIVATE = 0x0006
 Global Const $HK_WM_HOTKEY = _WinAPI_RegisterWindowMessage('{509ADA08-BDC8-45BC-8082-1FFA4CB8D1C8}')
 Global Const $HK_WM_INPUT = 0x00FF
 
-Global $hkTb[1][12] = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, GUICreate('')]]
+Global $hkTb[1][12] = [[0, 0, 0, 0, 0, 0, 0, 0, 0, 0, GUICreate(''), 0]]
 
 #cs
 
 DO NOT USE THIS ARRAY IN THE SCRIPT, INTERNAL USE ONLY!
 
 $hkTb[0][0 ]   - Count item of array
-     [0][1 ]   - Interruption control flag (need to set this flag before changing $hkTb array)
-     [0][2 ]   - Last hot key pressed (16-bit)
-     [0][3 ]   - Disable hot keys control flag (_HotKey_Disable(), _HotKey_Enable())
+	 [0][1 ]   - Interruption control flag (need to set this flag before changing $hkTb array)
+	 [0][2 ]   - Last hot key pressed (16-bit)
+	 [0][3 ]   - Disable hot keys control flag (_HotKey_Disable(), _HotKey_Enable())
      [0][4 ]   - Handle to the user-defined DLL callback function
      [0][5 ]   - Handle to the hook procedure
-     [0][6 ]   - General counter of calls user functions
-     [0][7 ]   - Block hot key flag for last pressed ($hkTb[i][3])
-     [0][8 ]   - Hold down control flag
-     [0][9 ]   - SCAW status (SHIFT-CTRL-ALT-WIN, 8-bit)
+     [0][6 ]   - Block hot key flag for last pressed ($hkTb[i][3])
+	 [0][7 ]   - Possition in the array for last pressed
+	 [0][8 ]   - Hold down control flag
+	 [0][9 ]   - SCAW status (SHIFT-CTRL-ALT-WIN, 8-bit)
      [0][10]   - Handle to "Hot" window
-     [0][11]   - Don't used
+	 [0][11]   - General counter of calls all user functions
 
 $hkTb[i][0 ]   - Combined hot key code (see _HotKey_Assign)
-     [i][1 ]   - User function name
-     [i][2 ]   - The title of the window to allow the hot key
-     [i][3 ]   - Block hot key flag
-     [i][4 ]   - Block overlapping user function flag
-     [i][5 ]   - Block repeat flag
-     [i][6 ]   - Extended function call flag
-     [i][7 ]   - Waiting for return flag
+	 [i][1 ]   - User function name
+	 [i][2 ]   - The title of the window to allow the hot key
+	 [i][3 ]   - Block hot key flag
+	 [i][4 ]   - Block overlapping user function flag
+	 [i][5 ]   - Block repeat flag
+	 [i][6 ]   - Extended function call flag
+	 [i][7 ]   - Post function call flag
      [i][8 ]   - Counter of calls user function
 	 [i][9-11] - Reserved
 
@@ -276,7 +279,7 @@ OnAutoItExitRegister('__HK_AutoItExit')
 ;								 $HK_FLAG_NOREPEAT
 ;								 $HK_FLAG_NOERROR
 ;								 $HK_FLAG_EXTENDEDCALL
-;								 $HK_FLAG_WAIT
+;								 $HK_FLAG_POSTCALL
 ;
 ;								 (See constants section in this library)
 ;
@@ -303,7 +306,7 @@ Func _HotKey_Assign($iKey, $sFunction = 0, $iFlags = -1, $sTitle = 0)
 	If $iFlags < 0 Then
 		$iFlags = $HK_FLAG_DEFAULT
 	EndIf
-	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][6] > 0) Then
+	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][11] > 0) Then
 		Return SetError(1,-1, 0)
 	EndIf
 	If (Not IsString($sFunction)) And ($sFunction = 0) Then
@@ -340,8 +343,11 @@ Func _HotKey_Assign($iKey, $sFunction = 0, $iFlags = -1, $sTitle = 0)
 		Next
 		ReDim $hkTb[$hkTb[0][0]][UBound($hkTb, 2)]
 		$hkTb[0][0] -= 1
-		If $iKey = $hkTb[0][2] Then
+		If $hkTb[0][2] = $iKey Then
 			__HK_Reset()
+		EndIf
+		If $hkTb[0][7] > $Index Then
+			$hkTb[0][7] -= 1
 		EndIf
 		$hkTb[0][8] = 0
 	Else
@@ -367,7 +373,7 @@ Func _HotKey_Assign($iKey, $sFunction = 0, $iFlags = -1, $sTitle = 0)
 		$hkTb[$Index][4] = (BitAND($iFlags, $HK_FLAG_NOOVERLAPCALL) = $HK_FLAG_NOOVERLAPCALL)
 		$hkTb[$Index][5] = (BitAND($iFlags, $HK_FLAG_NOREPEAT) = $HK_FLAG_NOREPEAT)
 		$hkTb[$Index][6] = (BitAND($iFlags, $HK_FLAG_EXTENDEDCALL) = $HK_FLAG_EXTENDEDCALL)
-		$hkTb[$Index][7] = (BitAND($iFlags, $HK_FLAG_WAIT) = $HK_FLAG_WAIT)
+		$hkTb[$Index][7] = (BitAND($iFlags, $HK_FLAG_POSTCALL) = $HK_FLAG_POSTCALL) And ($hkTb[$Index][6])
 		$hkTb[$Index][8] = 0
 		For $i = 9 To 11
 			$hkTb[$Index][$i] = 0
@@ -392,7 +398,7 @@ EndFunc   ;==>_HotKey_Assign
 ;====================================================================================================================================
 
 Func _HotKey_Enable()
-	If $hkTb[0][6] > 0 Then
+	If $hkTb[0][11] > 0 Then
 		Return SetError(1,-1, 0)
 	EndIf
 	If ($hkTb[0][5] = 0) And ($hkTb[0][0] > 0) Then
@@ -431,7 +437,7 @@ Func _HotKey_Disable($iFlags = -1)
 	If $iFlags < 0 Then
 		$iFlags = 0
 	EndIf
-	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][6] > 0) Then
+	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][11] > 0) Then
 		Return SetError(1,-1, 0)
 	EndIf
 	If (BitAND($iFlags, $HK_FLAG_NOUNHOOK) = 0) And ($hkTb[0][5]) Then
@@ -469,7 +475,7 @@ Func _HotKey_Release($iFlags = -1)
 	If $iFlags < 0 Then
 		$iFlags = 0
 	EndIf
-	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][6] > 0) Then
+	If (BitAND($iFlags, $HK_FLAG_NOERROR) = 0) And ($hkTb[0][11] > 0) Then
 		Return SetError(1,-1, 0)
 	EndIf
 	If (BitAND($iFlags, $HK_FLAG_NOUNHOOK) = 0) And ($hkTb[0][5]) Then
@@ -500,13 +506,18 @@ Func __HK_Active($hWnd)
 	Return 0
 EndFunc   ;==>__HK_Active
 
-Func __HK_Call($iIndex)
-	If ($hkTb[$iIndex][4] = 0) Or ($hkTb[$iIndex][8] = 0) Then
-		If $hkTb[$iIndex][7] = 0 Then
-			DllCall('user32.dll', 'int', 'PostMessage', 'hwnd', $hkTb[0][10], 'uint', $HK_WM_HOTKEY, 'int', $iIndex, 'int', 0xAFAF)
-		Else
-			DllCall('user32.dll', 'int', 'SendMessage', 'hwnd', $hkTb[0][10], 'uint', $HK_WM_HOTKEY, 'int', $iIndex, 'int', 0xAFAF)
-		EndIf
+Func __HK_Call($iFlag)
+
+	Local $Index = $hkTb[0][7]
+
+	Switch $iFlag
+		Case 1
+			If (Not __HK_Active($hkTb[$Index][2])) Or ($hkTb[$Index][7] = 0) Then
+				Return
+			EndIf
+	EndSwitch
+	If ($hkTb[$Index][4] = 0) Or ($hkTb[$Index][8] = 0) Then
+		_WinAPI_PostMessage($hkTb[0][10], $HK_WM_HOTKEY, $iFlag, $Index)
 	EndIf
 EndFunc   ;==>__HK_Call
 
@@ -570,14 +581,15 @@ Func __HK_Hook($iCode, $wParam, $lParam)
 										EndIf
 									Else
 										$hkTb[0][2] = $hkTb[$i][0]
-										$hkTb[0][7] = $hkTb[$i][3]
+										$hkTb[0][6] = $hkTb[$i][3]
+										$hkTb[0][7] = $i
 										$Int = 1
 									EndIf
 									If $hkTb[$i][3] = 0 Then
 										$Return = 1
 									EndIf
 									If $Int Then
-										__HK_Call($i)
+										__HK_Call(0)
 									EndIf
 									ExitLoop
 								EndIf
@@ -602,7 +614,7 @@ Func __HK_Hook($iCode, $wParam, $lParam)
 							Case 0x5B, 0x5C
 								$hkTb[0][9] = BitAND($hkTb[0][9], 0xF7)
 						EndSwitch
-						If ($hkTb[0][2] > 0) And ($hkTb[0][7] = 0) And ($hkTb[0][9] = 0) Then
+						If ($hkTb[0][2] > 0) And ($hkTb[0][6] = 0) And ($hkTb[0][9] = 0) Then
 							$hkTb[0][1] = 1
 							__HK_KeyUp($vkCode)
 							$hkTb[0][1] = 0
@@ -611,6 +623,9 @@ Func __HK_Hook($iCode, $wParam, $lParam)
 					Case BitAND($hkTb[0][2], 0x00FF)
 						$hkRt[$vkCode] += 1
 						$hkTb[0][2] = 0
+						If ($hkTb[0][7] > 0) And ($hkTb[0][8] = 0) Then
+							__HK_Call(1)
+						EndIf
 					Case Else
 						$hkRt[$vkCode] += 1
 				EndSwitch
@@ -654,6 +669,7 @@ EndFunc   ;==>__HK_Raw
 
 Func __HK_Reset()
 	$hkTb[0][2] = 0
+	$hkTb[0][6] = 0
 	$hkTb[0][7] = 0
 	$hkTb[0][9] = 0
 	For $i = 0 To 0xFF
@@ -723,21 +739,29 @@ Func HK_WM_HOTKEY($hWnd, $iMsg, $wParam, $lParam)
 
 	Switch $hWnd
 		Case $hkTb[0][10]
-			Switch $lParam
-				Case 0xAFAF
-					$hkTb[0][6] += 1
-					$hkTb[$wParam][8] += 1
-					If $hkTb[$wParam][6] = 1 Then
-						Call($hkTb[$wParam][1], $hkTb[$wParam][0])
-					Else
-						Call($hkTb[$wParam][1])
-					EndIf
-					$hkTb[$wParam][8] -= 1
-					$hkTb[0][6] -= 1
-;~					If (@error = 0xDEAD) And (@extended = 0xBEEF) Then
-;~						__HK_Error($hkTb[$wParam][1] & '(): Function does not exist or invalid number of parameters.')
-;~					EndIf
+
+			Local $Key = $hkTb[$lParam][0]
+
+			Switch $wParam
+				Case 0
+
+				Case 1
+					$Key = -$Key
+				Case Else
+					Return
 			EndSwitch
+			$hkTb[0][11] += 1
+			$hkTb[$lParam][8] += 1
+			If $hkTb[$lParam][6] = 1 Then
+				Call($hkTb[$lParam][1], $Key)
+			Else
+				Call($hkTb[$lParam][1])
+			EndIf
+			$hkTb[$lParam][8] -= 1
+			$hkTb[0][11] -= 1
+;~			If (@error = 0xDEAD) And (@extended = 0xBEEF) Then
+;~				__HK_Error($hkTb[$lParam][1] & '(): Function does not exist or invalid number of parameters.')
+;~			EndIf
 	EndSwitch
 EndFunc   ;==>HK_WM_HOTKEY
 
