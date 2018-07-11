@@ -5,6 +5,10 @@
 #include <WinAPIvkeysConstants.au3>
 #include <HotKey.au3>
 
+; TODO: reposition inside screen
+; TODO: bring program to front if already open
+; TODO: Make tray menu useful
+
 #RequireAdmin
 
 ; Opt( "GUICoordMode", 0)
@@ -13,13 +17,16 @@ Opt("TrayMenuMode", 3)
     
 Global Const $AC_SRC_ALPHA = 1
 Global Const $iLanguage = 0x0409
-Global $g_hImage, $aCurInf
+Global $bgImage 
+Global $aCurInf
 Global $iCounter = 0
-Global $iGuiHideTimeout = 100
+Global $iGuiHideTimeout = 50
 Global $bFirstRun = True, $bGuiState = False
+Global Const $bShowBG = False
+Global $iLowVal = 5, $iHighVal = 255, $iStepVal = 50, $iSleepVal = 5 ; Fade settings
 
 Local $fScriptVersion = .2
-Local $iTransBG=20 ; TODO: transparency of PopUp
+Local $iTransBG=20 ; 
 Local $sIconTray = @ScriptDir & "\Resources\P-icon.ico"
 TraySetToolTip("b9Misc AutoIt, ver. " & $fScriptVersion) ; Set the tray menu tooltip with information about the icon index.
 TraySetIcon($sIconTray, 0) ; Set the tray menu icon using the shell32.dll and the random index number.
@@ -67,16 +74,22 @@ Func ShowGUI()
 	GUISetState(@SW_SHOWNORMAL, $hGUIbuttB)
 	GUISetState(@SW_SHOWNORMAL, $hGUIbuttC)
 	GUISetState(@SW_SHOWNORMAL, $hGUIbuttD)
+
+	FadeGuiABCD($iLowVal, $iHighVal, $iStepVal, $iSleepVal)
+
 	$iCounter = 0
 	$bGuiState = True
 EndFunc	; ==> ShowGUI
 
 Func HideGUI()
+	FadeGuiABCD($iHighVal, $iLowVal, ($iStepVal * -1), ($iSleepVal * 5))
+
 	GUISetState(@SW_HIDE, $hGUIbg)
 	GUISetState(@SW_HIDE, $hGUIbuttA)
 	GUISetState(@SW_HIDE, $hGUIbuttB)
 	GUISetState(@SW_HIDE, $hGUIbuttC)
 	GUISetState(@SW_HIDE, $hGUIbuttD)
+
 	$iCounter = 0
 	$bGuiState = False
 EndFunc ; ==> HideGUI
@@ -89,69 +102,69 @@ Func GUIPopBuild()
 	_GDIPlus_Startup()
 	; ; button images - must be the same size
 	$pngSrcA = @ScriptDir & "\Icon1.png"
-		Global Const $hImageA = _GDIPlus_ImageLoadFromFile($pngSrcA)
+		Global Const $gImageA = _GDIPlus_ImageLoadFromFile($pngSrcA)
 	$pngSrcA1 = @ScriptDir & "\Icon1a.png"
-		Global Const $hImageA1 = _GDIPlus_ImageLoadFromFile($pngSrcA1)
+		Global Const $gImageA1 = _GDIPlus_ImageLoadFromFile($pngSrcA1)
 	$pngSrcB = @ScriptDir & "\Icon2.png"
-		Global Const $hImageB = _GDIPlus_ImageLoadFromFile($pngSrcB)
+		Global Const $gImageB = _GDIPlus_ImageLoadFromFile($pngSrcB)
 	$pngSrcB1 = @ScriptDir & "\Icon2a.png"
-		Global Const $hImageB1 = _GDIPlus_ImageLoadFromFile($pngSrcB1)
+		Global Const $gImageB1 = _GDIPlus_ImageLoadFromFile($pngSrcB1)
 	$pngSrcC = @ScriptDir & "\Icon3.png"
-		Global Const $hImageC = _GDIPlus_ImageLoadFromFile($pngSrcC)
+		Global Const $gImageC = _GDIPlus_ImageLoadFromFile($pngSrcC)
 	$pngSrcC1 = @ScriptDir & "\Icon3a.png"
-		Global Const $hImageC1 = _GDIPlus_ImageLoadFromFile($pngSrcC1)
+		Global Const $gImageC1 = _GDIPlus_ImageLoadFromFile($pngSrcC1)
 	$pngSrcD = @ScriptDir & "\Icon4.png"
-		Global Const $hImageD = _GDIPlus_ImageLoadFromFile($pngSrcD)
+		Global Const $gImageD = _GDIPlus_ImageLoadFromFile($pngSrcD)
 	$pngSrcD1 = @ScriptDir & "\Icon4a.png"
-		Global Const $hImageD1 = _GDIPlus_ImageLoadFromFile($pngSrcD1)
-	Global $iWidth = _GDIPlus_ImageGetWidth($hImageA)
-	Global $iHeight = _GDIPlus_ImageGetHeight($hImageA)
+		Global Const $gImageD1 = _GDIPlus_ImageLoadFromFile($pngSrcD1)
+	Global $iWidth = _GDIPlus_ImageGetWidth($gImageA)
+	Global $iHeight = _GDIPlus_ImageGetHeight($gImageA)
 
 	; background PNG
 	$pngSrcBG = @ScriptDir & "\bg.png"
 	$bgImage = _GDIPlus_ImageLoadFromFile($pngSrcBG)
-	$bgWidth = _GDIPlus_ImageGetWidth($bgImage)
-	$bgHeight = _GDIPlus_ImageGetHeight($bgImage)
+	$ibgWidth = _GDIPlus_ImageGetWidth($bgImage)
+	$ibgHeight = _GDIPlus_ImageGetHeight($bgImage)
 
 	; Create Main Layered Window at Mouse Position
 	Local $aMPos = MouseGetPos()
-	Global Const $hGUIbg = GUICreate("BgGui", $bgWidth, $bgHeight, $aMPos[0], $aMPos[1], $WS_POPUP, $WS_EX_LAYERED)
-	Global Const $idMaskA = GUICtrlCreateLabel("", 0,0, $bgWidth/2,$bgHeight/2)
-	Global Const $idMaskB = GUICtrlCreateLabel("", $bgWidth/2,0, $bgWidth/2,$bgHeight/2)
-	Global Const $idMaskC = GUICtrlCreateLabel("", 0,$bgHeight/2, $bgWidth/2,$bgHeight/2)
-	Global Const $idMaskD = GUICtrlCreateLabel("", $bgWidth/2,$bgHeight/2, $bgWidth/2,$bgHeight/2)
-	SetBitmap($hGUIbg, $bgImage, 0) 
+	; Global Const $hGUIbg = GUICreate("BgGui", $ibgWidth, $ibgHeight, $aMPos[0], $aMPos[1], $WS_POPUP, $WS_EX_LAYERED)
+	Global Const $hGUIbg = GUICreate("BgGui", $ibgWidth, $ibgHeight, $aMPos[0], $aMPos[1], $WS_POPUP, BitOR($WS_EX_LAYERED, $WS_EX_TOOLWINDOW) )
+	Global Const $idMaskA = GUICtrlCreateLabel("", 0,0, $ibgWidth/2,$ibgHeight/2)
+	Global Const $idMaskB = GUICtrlCreateLabel("", $ibgWidth/2,0, $ibgWidth/2,$ibgHeight/2)
+	Global Const $idMaskC = GUICtrlCreateLabel("", 0,$ibgHeight/2, $ibgWidth/2,$ibgHeight/2)
+	Global Const $idMaskD = GUICtrlCreateLabel("", $ibgWidth/2,$ibgHeight/2, $ibgWidth/2,$ibgHeight/2)
+	If $bShowBG Then
+		SetBitmap($hGUIbg, $bgImage, 0) 
+	EndIf
 
 	GUISetState()
 	; GUISetState($GUI_DISABLE, $hGUIbg)
 	WinSetOnTop($hGUIbg, "", 1)
-	SetBitmap($hGUIbg, $bgImage, $iTransBG) ; NOTE: disable if no BG TODO: might clean up this when no bg is used
+	If $bShowBG Then
+		SetBitmap($hGUIbg, $bgImage, $iTransBG) ; NOTE: disable if no BG
+	EndIf
 
-	; Fade-in
-	; For $i = 0 To 255 Step 10
-	;     SetBitmap($hGUIbg, $bgImage, $i)
-	;     Sleep(10)
-	; Next
 
 	; Create button child GUIs
 	Global Const $hGUIbuttA = GUICreate("ButtonA", $iWidth, $iHeight, ($aMPos[0]+1), ($aMPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttA, $hImageA, 255)
+	SetBitmap($hGUIbuttA, $gImageA, 255)
 	Global $ContextA = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuA()
 	GUISetState()
 
 	Global Const $hGUIbuttB = GUICreate("ButtonB", $iWidth, $iHeight, ($aMPos[0]+$iWidth+2), ($aMPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttB, $hImageB, 255)
+	SetBitmap($hGUIbuttB, $gImageB, 255)
 	GUISetState()
 
 	Global Const $hGUIbuttC = GUICreate("ButtonC", $iWidth, $iHeight, ($aMPos[0]+1), ($aMPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttC, $hImageC, 255)
+	SetBitmap($hGUIbuttC, $gImageC, 255)
 	Global $ContextC = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuC()
 	GUISetState()
 
 	Global Const $hGUIbuttD = GUICreate("ButtonD", $iWidth, $iHeight, ($aMPos[0]+$iWidth+2), ($aMPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttD, $hImageD, 255)
+	SetBitmap($hGUIbuttD, $gImageD, 255)
 	Global $ContextD = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuD()
 	GUISetState()
@@ -175,7 +188,7 @@ Func GUIPopBuild()
 							Opt('GUIOnEventMode', 1)
 							TrackPopupMenu($hGUIbuttA, GUICtrlGetHandle($ContextA), MouseGetPos(0), MouseGetPos(1))													
 						Case $hGUIbuttB	
-							Local $iPID = ShellExecute("C:\Ketarin\Tools\KeePass\KeePass.exe", "")  				; TODO: bring to front if already open
+							Local $iPID = ShellExecute("C:\Ketarin\Tools\KeePass\KeePass.exe", "")  				
 							HideGUI()
 						Case $hGUIbuttC	
 							Opt('GUIOnEventMode', 1)
@@ -190,34 +203,34 @@ Func GUIPopBuild()
 					If $bGuiState Then
 							$aCurInf = GUIGetCursorInfo($hGUIbg)
 							If $aCurInf[4] = 0 Then
-								SetBitmap($hGUIbuttA, $hImageA, 255)
-								SetBitmap($hGUIbuttB, $hImageB, 255)
-								SetBitmap($hGUIbuttC, $hImageC, 255)
-								SetBitmap($hGUIbuttD, $hImageD, 255)
+								SetBitmap($hGUIbuttA, $gImageA, 255)
+								SetBitmap($hGUIbuttB, $gImageB, 255)
+								SetBitmap($hGUIbuttC, $gImageC, 255)
+								SetBitmap($hGUIbuttD, $gImageD, 255)
 								$iCounter = $iCounter + 1
 								if $iCounter > $iGuiHideTimeout Then 
 										HideGUI()
 								EndIf
 							ElseIf $aCurInf[4] = $idMaskA Then 
-								SetBitmap($hGUIbuttA, $hImageA1, 255)
-								SetBitmap($hGUIbuttB, $hImageB, 255)
-								SetBitmap($hGUIbuttC, $hImageC, 255)
-								SetBitmap($hGUIbuttD, $hImageD, 255)
+								SetBitmap($hGUIbuttA, $gImageA1, 255)
+								SetBitmap($hGUIbuttB, $gImageB, 255)
+								SetBitmap($hGUIbuttC, $gImageC, 255)
+								SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskB Then 
-								SetBitmap($hGUIbuttA, $hImageA, 255)
-								SetBitmap($hGUIbuttB, $hImageB1, 255)
-								SetBitmap($hGUIbuttC, $hImageC, 255)
-								SetBitmap($hGUIbuttD, $hImageD, 255)
+								SetBitmap($hGUIbuttA, $gImageA, 255)
+								SetBitmap($hGUIbuttB, $gImageB1, 255)
+								SetBitmap($hGUIbuttC, $gImageC, 255)
+								SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskC Then 
-								SetBitmap($hGUIbuttA, $hImageA, 255)
-								SetBitmap($hGUIbuttB, $hImageB, 255)
-								SetBitmap($hGUIbuttC, $hImageC1, 255)
-								SetBitmap($hGUIbuttD, $hImageD, 255)
+								SetBitmap($hGUIbuttA, $gImageA, 255)
+								SetBitmap($hGUIbuttB, $gImageB, 255)
+								SetBitmap($hGUIbuttC, $gImageC1, 255)
+								SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskD Then 
-								SetBitmap($hGUIbuttA, $hImageA, 255)
-								SetBitmap($hGUIbuttB, $hImageB, 255)
-								SetBitmap($hGUIbuttC, $hImageC, 255)
-								SetBitmap($hGUIbuttD, $hImageD1, 255)
+								SetBitmap($hGUIbuttA, $gImageA, 255)
+								SetBitmap($hGUIbuttB, $gImageB, 255)
+								SetBitmap($hGUIbuttC, $gImageC, 255)
+								SetBitmap($hGUIbuttD, $gImageD1, 255)
 							Else
 								$iCounter = 0
 							EndIf										
@@ -227,8 +240,8 @@ Func GUIPopBuild()
 
 	; Release resources
 	_GDIPlus_ImageDispose($bgImage)
-	_GDIPlus_ImageDispose($hImageA)
-	_GDIPlus_ImageDispose($hImageB)
+	_GDIPlus_ImageDispose($gImageA)
+	_GDIPlus_ImageDispose($gImageB)
 	_GDIPlus_Shutdown()
 EndFunc ; => GUIPopBuild
 
@@ -308,12 +321,8 @@ Func ContextMenuD()
 EndFunc ;==> ContextMenuD Gui
 
 Func _MenuTest()
-	; Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
-	; SetBitmap($hGUIbuttD, $hImageD, 10)
-	; GUISetState(@SW_ENABLE, $hGUIbuttD)
-	; GUISetState(@SW_SHOW)
-	Sleep(100)
-	MsgBox($MB_OK, "AutoIt", @DesktopHeight & " x " & @DesktopWidth)
+
+	MsgBox($MB_OK, "AutoIt", $iStepVal & " x " & ($iStepVal*-1) )
 EndFunc
 
 Func _MenuAu3Info()
@@ -337,8 +346,67 @@ EndFunc
 Func langNext() ; uses the Hotkey UDF
   $hGUIlang = GUICreate("GuiLang", 1, 1, @DesktopWidth-1, @DesktopHeight-1, $WS_POPUP, $WS_EX_TOOLWINDOW)
   GUISetState(@SW_SHOW)
+	Sleep(60)
 	  _WinAPI_ActivateKeyboardLayout($HKL_NEXT)
   GUIDelete($hGUIlang)
+EndFunc
+
+; === GUI CALL/FADE FUNCTIONS ====
+Func FadeGuiABCD(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+			SetBitmap($hGUIbuttA, $gImageA, $i)
+			SetBitmap($hGUIbuttB, $gImageB, $i)
+			SetBitmap($hGUIbuttC, $gImageC, $i)
+			SetBitmap($hGUIbuttD, $gImageD, $i)
+	    Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
+EndFunc
+
+Func FadeGuiA(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+			SetBitmap($hGUIbuttA, $gImageA, $i)
+	    Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
+EndFunc
+
+Func FadeGuiB(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+			SetBitmap($hGUIbuttB, $gImageB, $i)
+			Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
+EndFunc
+
+Func FadeGuiC(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+			SetBitmap($hGUIbuttC, $gImageC, $i)
+	    Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
+EndFunc
+
+Func FadeGuiD(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+			SetBitmap($hGUIbuttD, $gImageD, $i)
+	    Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
+EndFunc
+
+Func FadeGuiBG(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
+	_GDIPlus_Startup()
+	For $i = $iLowVal To $iHighVal Step $iStepVal
+	    SetBitmap($hGUIbg, $bgImage, $i)
+	    Sleep($iSleepVal)
+	Next
+	_GDIPlus_Shutdown()
 EndFunc
 
 ; === OTHER FUNCTIONS ====
@@ -347,26 +415,20 @@ Func OKButton()
     MsgBox("GUI Event", "You selected OK!")
 EndFunc   ;==>OKButton
 
-; Func WM_LBUTTONDBLCLK($hWnd, $iMsg, $iParam, $lParam)
-; 	#forceref $hWnd, $iMsg, $iParam, $lParam
-; 	; SetBitmap($g_hGUI2, $g_hImage, GUICtrlRead($g_idSlider))  
-;   MsgBox($MB_OK, "Blah", "Icon!" + $hWnd)
-; EndFunc   ;==>WM_HSCROLL
-
 ; ===============================================================================================================================
 ; SetBitMap Function
 ; ===============================================================================================================================
-Func SetBitmap($hGUI, $hImage, $iOpacity)
+Func SetBitmap($hGUI, $gImage, $iOpacity)
 	Local $hScrDC, $hMemDC, $hBitmap, $hOld, $pSize, $tSize, $pSource, $tSource, $pBlend, $tBlend
 
 	$hScrDC = _WinAPI_GetDC(0)
 	$hMemDC = _WinAPI_CreateCompatibleDC($hScrDC)
-	$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($hImage)
+	$hBitmap = _GDIPlus_BitmapCreateHBITMAPFromBitmap($gImage)
 	$hOld = _WinAPI_SelectObject($hMemDC, $hBitmap)
 	$tSize = DllStructCreate($tagSIZE)
 	$pSize = DllStructGetPtr($tSize)
-	DllStructSetData($tSize, "X", _GDIPlus_ImageGetWidth($hImage))
-	DllStructSetData($tSize, "Y", _GDIPlus_ImageGetHeight($hImage))
+	DllStructSetData($tSize, "X", _GDIPlus_ImageGetWidth($gImage))
+	DllStructSetData($tSize, "Y", _GDIPlus_ImageGetHeight($gImage))
 	$tSource = DllStructCreate($tagPOINT)
 	$pSource = DllStructGetPtr($tSource)
 	$tBlend = DllStructCreate($tagBLENDFUNCTION)
