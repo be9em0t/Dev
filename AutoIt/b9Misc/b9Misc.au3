@@ -4,16 +4,22 @@
 #include <MsgBoxConstants.au3>
 #include <WinAPIvkeysConstants.au3>
 #include <HotKey.au3>
+#include <TrayConstants.au3>
 
+; TODO: call programs as regular user, not elevated
 ; TODO: reposition inside screen
-; TODO: bring program to front if already open
-; TODO: Make tray menu useful
+; TODO: ask yes no on Quit
 
 #RequireAdmin
 
 ; Opt( "GUICoordMode", 0)
 ; Opt("GUIOnEventMode", 1)
-Opt("TrayMenuMode", 3)
+Opt("TrayMenuMode", 0)
+Opt("TrayAutoPause", 0) ;0 = no pause, 1 = (default) pause. If there is no DefaultMenu no pause will occurs.
+Opt("WinTitleMatchMode", 2) ;1=start, 2=subStr, 3=exact, 4=advanced, -1 to -4=Nocase
+
+Local $fScriptVersion = .4
+Local $iTransBG=20 ; 
     
 Global Const $AC_SRC_ALPHA = 1
 Global Const $iLanguage = 0x0409
@@ -24,12 +30,10 @@ Global $iGuiHideTimeout = 50
 Global $bFirstRun = True, $bGuiState = False
 Global Const $bShowBG = False
 Global $iLowVal = 5, $iHighVal = 255, $iStepVal = 50, $iSleepVal = 5 ; Fade settings
+Global Const $sGuiBRun = "c:\Ketarin\Tools\KP\KeePass.exe"
 
-Local $fScriptVersion = .2
-Local $iTransBG=20 ; 
 Local $sIconTray = @ScriptDir & "\Resources\P-icon.ico"
-TraySetToolTip("b9Misc AutoIt, ver. " & $fScriptVersion) ; Set the tray menu tooltip with information about the icon index.
-TraySetIcon($sIconTray, 0) ; Set the tray menu icon using the shell32.dll and the random index number.
+Local $sIconTrayPause = @ScriptDir & "\Resources\Power - Shut Down.ico" ;Security Denied.ico"
 
 If Not IsAdmin() Then MsgBox($MB_SYSTEMMODAL, "", "The script needs admin rights.")
 ; If IsAdmin() Then MsgBox($MB_SYSTEMMODAL, "", "The script running with admin rights.")
@@ -174,6 +178,20 @@ Func GUIPopBuild()
 		HideGUI()
 	EndIf
 
+; ---- Tray Menu ----
+	TraySetToolTip("b9Misc AutoIt, ver. " & $fScriptVersion) ; Set the tray menu tooltip with information about the icon index.
+	TraySetIcon($sIconTray, 0) ; Set the tray menu icon using the shell32.dll and the random index number.
+
+	Local $idAbout = TrayCreateItem("About")
+	TrayCreateItem("") ; Create a separator line.
+	; Local $idPause = TrayCreateItem("Pause")
+	; Local $idExit = TrayCreateItem("Exit")
+
+	TraySetPauseIcon($sIconTrayPause, 0) ; Set the pause icon. This will flash on and off when the tray menu is selected and the script is paused.
+	TraySetState($TRAY_ICONSTATE_SHOW) ; Show the tray menu.
+	TraySetClick(BitOR($TRAY_CLICK_PRIMARYDOWN, $TRAY_CLICK_SECONDARYDOWN)) ; Show the tray menu when the mouse if hovered over the tray icon.
+; ---
+
 	Local $aMsg = 0
 	While 1			
 		$aMsg = GUIGetMsg($GUI_EVENT_ARRAY)
@@ -188,7 +206,12 @@ Func GUIPopBuild()
 							Opt('GUIOnEventMode', 1)
 							TrackPopupMenu($hGUIbuttA, GUICtrlGetHandle($ContextA), MouseGetPos(0), MouseGetPos(1))													
 						Case $hGUIbuttB	
-							Local $iPID = ShellExecute("C:\Ketarin\Tools\KeePass\KeePass.exe", "")  				
+							If Not ProcessExists("keepass.exe") Then
+								Local $iPID = ShellExecute($sGuiBRun, "")
+							Else
+								WinActivate("KeePass")
+							EndIf
+
 							HideGUI()
 						Case $hGUIbuttC	
 							Opt('GUIOnEventMode', 1)
@@ -236,6 +259,24 @@ Func GUIPopBuild()
 							EndIf										
 					EndIf					
 		EndSwitch
+
+		Switch TrayGetMsg()
+		Case $idAbout ; Display a message box about the AutoIt version and installation path of the AutoIt executable.
+			MsgBox($MB_SYSTEMMODAL, "", _ 
+				"b9Misc AutoIt, ver. " & $fScriptVersion & @CRLF & _
+				"AutoIt ver.: " & @AutoItVersion & @CRLF & _
+				"Install Path: " & StringLeft(@AutoItExe, StringInStr(@AutoItExe, "\", $STR_NOCASESENSEBASIC, -1) - 1)) ; Find the folder of a full path.
+
+		; Case $idPause ; Exit the loop.
+		; 		_MenuPause()
+		; 		; _MenuQuit()
+		; 		ExitLoop
+
+		; Case $idExit ; Exit the loop.
+		; 		_MenuQuit()
+		; 		ExitLoop
+	EndSwitch
+
 	WEnd
 
 	; Release resources
@@ -321,8 +362,9 @@ Func ContextMenuD()
 EndFunc ;==> ContextMenuD Gui
 
 Func _MenuTest()
-
-	MsgBox($MB_OK, "AutoIt", $iStepVal & " x " & ($iStepVal*-1) )
+	if ProcessExists("keepass.exe") Then
+		MsgBox($MB_OK, "AutoIt", "Exists" )
+	EndIf
 EndFunc
 
 Func _MenuAu3Info()
@@ -338,8 +380,14 @@ Func _MenuEditScript()
 	Local $iPID = ShellExecute("c:\Ketarin\Data\VSCode\Code.exe", "d:\Work\OneDrive\Dev\AutoIt\b9Misc\b9Misc.au3")
 EndFunc
 
+Func _MenuPause()
+	While 1
+		Sleep(100) ; An idle loop.
+	WEnd
+EndFunc   ;==>Example
+
 Func _MenuQuit()
-		Exit ; TODO: ask yes no
+		Exit
 EndFunc
 
 ; === LANGUAGE KBD LAYOUT FUNCTIONS ====
