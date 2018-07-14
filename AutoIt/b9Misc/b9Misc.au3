@@ -6,9 +6,16 @@
 #include <HotKey.au3>
 #include <TrayConstants.au3>
 
-; TODO: call programs as regular user, not elevated
+#include <ProcessConstants.au3>
+#include <SecurityConstants.au3>
+; #include <StructureConstants.au3>
+#include <WinAPIHObj.au3>
+; #include <WinAPIProc.au3>
+
+
 ; TODO: reposition inside screen
 ; TODO: ask yes no on Quit
+; TODO: minimise some programs on ESC
 
 #RequireAdmin
 
@@ -31,6 +38,8 @@ Global $bFirstRun = True, $bGuiState = False
 Global Const $bShowBG = False
 Global $iLowVal = 5, $iHighVal = 255, $iStepVal = 50, $iSleepVal = 5 ; Fade settings
 Global Const $sGuiBRun = "c:\Ketarin\Tools\KP\KeePass.exe"
+Global Const $sEditor = "c:\Ketarin\Data\VSCode\Code.exe"
+Global Const $sPDFviewer = "c:\Ketarin\Data\SumatraPDF\SumatraPDF.exe"
 
 Local $sIconTray = @ScriptDir & "\Resources\P-icon.ico"
 Local $sIconTrayPause = @ScriptDir & "\Resources\Power - Shut Down.ico" ;Security Denied.ico"
@@ -105,27 +114,27 @@ EndFunc ; ==> HideGUI
 Func GUIPopBuild()
 	_GDIPlus_Startup()
 	; ; button images - must be the same size
-	$pngSrcA = @ScriptDir & "\Icon1.png"
+	$pngSrcA = @ScriptDir & "\Resources\Icon1.png"
 		Global Const $gImageA = _GDIPlus_ImageLoadFromFile($pngSrcA)
-	$pngSrcA1 = @ScriptDir & "\Icon1a.png"
+	$pngSrcA1 = @ScriptDir & "\Resources\Icon1a.png"
 		Global Const $gImageA1 = _GDIPlus_ImageLoadFromFile($pngSrcA1)
-	$pngSrcB = @ScriptDir & "\Icon2.png"
+	$pngSrcB = @ScriptDir & "\Resources\Icon2.png"
 		Global Const $gImageB = _GDIPlus_ImageLoadFromFile($pngSrcB)
-	$pngSrcB1 = @ScriptDir & "\Icon2a.png"
+	$pngSrcB1 = @ScriptDir & "\Resources\Icon2a.png"
 		Global Const $gImageB1 = _GDIPlus_ImageLoadFromFile($pngSrcB1)
-	$pngSrcC = @ScriptDir & "\Icon3.png"
+	$pngSrcC = @ScriptDir & "\Resources\Icon3.png"
 		Global Const $gImageC = _GDIPlus_ImageLoadFromFile($pngSrcC)
-	$pngSrcC1 = @ScriptDir & "\Icon3a.png"
+	$pngSrcC1 = @ScriptDir & "\Resources\Icon3a.png"
 		Global Const $gImageC1 = _GDIPlus_ImageLoadFromFile($pngSrcC1)
-	$pngSrcD = @ScriptDir & "\Icon4.png"
+	$pngSrcD = @ScriptDir & "\Resources\Icon4.png"
 		Global Const $gImageD = _GDIPlus_ImageLoadFromFile($pngSrcD)
-	$pngSrcD1 = @ScriptDir & "\Icon4a.png"
+	$pngSrcD1 = @ScriptDir & "\Resources\Icon4a.png"
 		Global Const $gImageD1 = _GDIPlus_ImageLoadFromFile($pngSrcD1)
 	Global $iWidth = _GDIPlus_ImageGetWidth($gImageA)
 	Global $iHeight = _GDIPlus_ImageGetHeight($gImageA)
 
 	; background PNG
-	$pngSrcBG = @ScriptDir & "\bg.png"
+	$pngSrcBG = @ScriptDir & "\Resources\bg.png"
 	$bgImage = _GDIPlus_ImageLoadFromFile($pngSrcBG)
 	$ibgWidth = _GDIPlus_ImageGetWidth($bgImage)
 	$ibgHeight = _GDIPlus_ImageGetHeight($bgImage)
@@ -139,36 +148,36 @@ Func GUIPopBuild()
 	Global Const $idMaskC = GUICtrlCreateLabel("", 0,$ibgHeight/2, $ibgWidth/2,$ibgHeight/2)
 	Global Const $idMaskD = GUICtrlCreateLabel("", $ibgWidth/2,$ibgHeight/2, $ibgWidth/2,$ibgHeight/2)
 	If $bShowBG Then
-		SetBitmap($hGUIbg, $bgImage, 0) 
+		_SetBitmap($hGUIbg, $bgImage, 0) 
 	EndIf
 
 	GUISetState()
 	; GUISetState($GUI_DISABLE, $hGUIbg)
 	WinSetOnTop($hGUIbg, "", 1)
 	If $bShowBG Then
-		SetBitmap($hGUIbg, $bgImage, $iTransBG) ; NOTE: disable if no BG
+		_SetBitmap($hGUIbg, $bgImage, $iTransBG) ; NOTE: disable if no BG
 	EndIf
 
 
 	; Create button child GUIs
 	Global Const $hGUIbuttA = GUICreate("ButtonA", $iWidth, $iHeight, ($aMPos[0]+1), ($aMPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttA, $gImageA, 255)
+	_SetBitmap($hGUIbuttA, $gImageA, 255)
 	Global $ContextA = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuA()
 	GUISetState()
 
 	Global Const $hGUIbuttB = GUICreate("ButtonB", $iWidth, $iHeight, ($aMPos[0]+$iWidth+2), ($aMPos[1]+1), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttB, $gImageB, 255)
+	_SetBitmap($hGUIbuttB, $gImageB, 255)
 	GUISetState()
 
 	Global Const $hGUIbuttC = GUICreate("ButtonC", $iWidth, $iHeight, ($aMPos[0]+1), ($aMPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttC, $gImageC, 255)
+	_SetBitmap($hGUIbuttC, $gImageC, 255)
 	Global $ContextC = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuC()
 	GUISetState()
 
 	Global Const $hGUIbuttD = GUICreate("ButtonD", $iWidth, $iHeight, ($aMPos[0]+$iWidth+2), ($aMPos[1]+$iHeight+2), $WS_POPUP, $WS_EX_LAYERED, $hGUIbg)
-	SetBitmap($hGUIbuttD, $gImageD, 255)
+	_SetBitmap($hGUIbuttD, $gImageD, 255)
 	Global $ContextD = GUICtrlCreateContextMenu(GUICtrlCreateDummy())
 	ContextMenuD()
 	GUISetState()
@@ -206,12 +215,7 @@ Func GUIPopBuild()
 							Opt('GUIOnEventMode', 1)
 							TrackPopupMenu($hGUIbuttA, GUICtrlGetHandle($ContextA), MouseGetPos(0), MouseGetPos(1))													
 						Case $hGUIbuttB	
-							If Not ProcessExists("keepass.exe") Then
-								Local $iPID = ShellExecute($sGuiBRun, "")
-							Else
-								WinActivate("KeePass")
-							EndIf
-
+							_MenuKP()
 							HideGUI()
 						Case $hGUIbuttC	
 							Opt('GUIOnEventMode', 1)
@@ -226,34 +230,34 @@ Func GUIPopBuild()
 					If $bGuiState Then
 							$aCurInf = GUIGetCursorInfo($hGUIbg)
 							If $aCurInf[4] = 0 Then
-								SetBitmap($hGUIbuttA, $gImageA, 255)
-								SetBitmap($hGUIbuttB, $gImageB, 255)
-								SetBitmap($hGUIbuttC, $gImageC, 255)
-								SetBitmap($hGUIbuttD, $gImageD, 255)
+								_SetBitmap($hGUIbuttA, $gImageA, 255)
+								_SetBitmap($hGUIbuttB, $gImageB, 255)
+								_SetBitmap($hGUIbuttC, $gImageC, 255)
+								_SetBitmap($hGUIbuttD, $gImageD, 255)
 								$iCounter = $iCounter + 1
 								if $iCounter > $iGuiHideTimeout Then 
 										HideGUI()
 								EndIf
 							ElseIf $aCurInf[4] = $idMaskA Then 
-								SetBitmap($hGUIbuttA, $gImageA1, 255)
-								SetBitmap($hGUIbuttB, $gImageB, 255)
-								SetBitmap($hGUIbuttC, $gImageC, 255)
-								SetBitmap($hGUIbuttD, $gImageD, 255)
+								_SetBitmap($hGUIbuttA, $gImageA1, 255)
+								_SetBitmap($hGUIbuttB, $gImageB, 255)
+								_SetBitmap($hGUIbuttC, $gImageC, 255)
+								_SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskB Then 
-								SetBitmap($hGUIbuttA, $gImageA, 255)
-								SetBitmap($hGUIbuttB, $gImageB1, 255)
-								SetBitmap($hGUIbuttC, $gImageC, 255)
-								SetBitmap($hGUIbuttD, $gImageD, 255)
+								_SetBitmap($hGUIbuttA, $gImageA, 255)
+								_SetBitmap($hGUIbuttB, $gImageB1, 255)
+								_SetBitmap($hGUIbuttC, $gImageC, 255)
+								_SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskC Then 
-								SetBitmap($hGUIbuttA, $gImageA, 255)
-								SetBitmap($hGUIbuttB, $gImageB, 255)
-								SetBitmap($hGUIbuttC, $gImageC1, 255)
-								SetBitmap($hGUIbuttD, $gImageD, 255)
+								_SetBitmap($hGUIbuttA, $gImageA, 255)
+								_SetBitmap($hGUIbuttB, $gImageB, 255)
+								_SetBitmap($hGUIbuttC, $gImageC1, 255)
+								_SetBitmap($hGUIbuttD, $gImageD, 255)
 							ElseIf $aCurInf[4] = $idMaskD Then 
-								SetBitmap($hGUIbuttA, $gImageA, 255)
-								SetBitmap($hGUIbuttB, $gImageB, 255)
-								SetBitmap($hGUIbuttC, $gImageC, 255)
-								SetBitmap($hGUIbuttD, $gImageD1, 255)
+								_SetBitmap($hGUIbuttA, $gImageA, 255)
+								_SetBitmap($hGUIbuttB, $gImageB, 255)
+								_SetBitmap($hGUIbuttC, $gImageC, 255)
+								_SetBitmap($hGUIbuttD, $gImageD1, 255)
 							Else
 								$iCounter = 0
 							EndIf										
@@ -362,22 +366,34 @@ Func ContextMenuD()
 EndFunc ;==> ContextMenuD Gui
 
 Func _MenuTest()
-	if ProcessExists("keepass.exe") Then
-		MsgBox($MB_OK, "AutoIt", "Exists" )
-	EndIf
+    ; _RunNonElevated('"' & @AutoItExe & '" /AutoIt3ExecuteLine  "MsgBox(4096, ''RunNonElevated'', ''IsAdmin() = '' & "IsAdmin()" & '', PID = '' & "@AutoItPID")"')
+  _RunNonElevated($sEditor & " c:\Ketarin\Data\temp\c5395\chr\History.txt")
+
+	; Run("cmd.exe")
+	; 	MsgBox($MB_OK, "AutoIt", "Exists" )
+	; EndIf
+EndFunc
+
+Func _MenuKP()
+		If Not ProcessExists("keepass.exe") Then
+			_RunNonElevated($sGuiBRun)
+		Else
+			WinActivate("KeePass")
+		EndIf
 EndFunc
 
 Func _MenuAu3Info()
-	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "")
+	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\Au3Info_x64.exe", "") ; run elevated
 
 EndFunc
 
 Func _MenuAutoItHelp()
-	Local $iPID = ShellExecute("c:\Ketarin\Tools\AutoIt\AutoIt.chm", "c:\Ketarin\Tools\AutoIt\")
+	_RunNonElevated($sPDFviewer & " " & "c:\Ketarin\Tools\AutoIt\AutoIt.chm")
 EndFunc
 
 Func _MenuEditScript()
-	Local $iPID = ShellExecute("c:\Ketarin\Data\VSCode\Code.exe", "d:\Work\OneDrive\Dev\AutoIt\b9Misc\b9Misc.au3")
+	; Local $iPID = ShellExecute("c:\Ketarin\Data\VSCode\Code.exe", "d:\Work\OneDrive\Dev\AutoIt\b9Misc\b9Misc.au3")
+  _RunNonElevated($sEditor & " " & @ScriptFullPath)
 EndFunc
 
 Func _MenuPause()
@@ -403,10 +419,10 @@ EndFunc
 Func FadeGuiABCD(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-			SetBitmap($hGUIbuttA, $gImageA, $i)
-			SetBitmap($hGUIbuttB, $gImageB, $i)
-			SetBitmap($hGUIbuttC, $gImageC, $i)
-			SetBitmap($hGUIbuttD, $gImageD, $i)
+			_SetBitmap($hGUIbuttA, $gImageA, $i)
+			_SetBitmap($hGUIbuttB, $gImageB, $i)
+			_SetBitmap($hGUIbuttC, $gImageC, $i)
+			_SetBitmap($hGUIbuttD, $gImageD, $i)
 	    Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -415,7 +431,7 @@ EndFunc
 Func FadeGuiA(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-			SetBitmap($hGUIbuttA, $gImageA, $i)
+			_SetBitmap($hGUIbuttA, $gImageA, $i)
 	    Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -424,7 +440,7 @@ EndFunc
 Func FadeGuiB(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-			SetBitmap($hGUIbuttB, $gImageB, $i)
+			_SetBitmap($hGUIbuttB, $gImageB, $i)
 			Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -433,7 +449,7 @@ EndFunc
 Func FadeGuiC(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-			SetBitmap($hGUIbuttC, $gImageC, $i)
+			_SetBitmap($hGUIbuttC, $gImageC, $i)
 	    Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -442,7 +458,7 @@ EndFunc
 Func FadeGuiD(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-			SetBitmap($hGUIbuttD, $gImageD, $i)
+			_SetBitmap($hGUIbuttD, $gImageD, $i)
 	    Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -451,7 +467,7 @@ EndFunc
 Func FadeGuiBG(ByRef $iLowVal, ByRef $iHighVal, ByRef $iStepVal, ByRef $iSleepVal)
 	_GDIPlus_Startup()
 	For $i = $iLowVal To $iHighVal Step $iStepVal
-	    SetBitmap($hGUIbg, $bgImage, $i)
+	    _SetBitmap($hGUIbg, $bgImage, $i)
 	    Sleep($iSleepVal)
 	Next
 	_GDIPlus_Shutdown()
@@ -464,9 +480,9 @@ Func OKButton()
 EndFunc   ;==>OKButton
 
 ; ===============================================================================================================================
-; SetBitMap Function
+; _SetBitmap Function
 ; ===============================================================================================================================
-Func SetBitmap($hGUI, $gImage, $iOpacity)
+Func _SetBitmap($hGUI, $gImage, $iOpacity)
 	Local $hScrDC, $hMemDC, $hBitmap, $hOld, $pSize, $tSize, $pSource, $tSource, $pBlend, $tBlend
 
 	$hScrDC = _WinAPI_GetDC(0)
@@ -488,6 +504,47 @@ Func SetBitmap($hGUI, $gImage, $iOpacity)
 	_WinAPI_SelectObject($hMemDC, $hOld)
 	_WinAPI_DeleteObject($hBitmap)
 	_WinAPI_DeleteDC($hMemDC)
-EndFunc   ;==>SetBitmap
+EndFunc   ;==>_SetBitmap
 
+; ===============================================================================================================================
+; Run Non-Elevated Function
+; ===============================================================================================================================
 
+Func _RunNonElevated($sCommandLine = "")
+    If Not IsAdmin() Then Return Run($sCommandLine) ; if current process is run non-elevated then just Run new one.
+
+    ; Structures needed for creating process
+    Local $tSTARTUPINFO = DllStructCreate($tagSTARTUPINFO)
+    Local $tPROCESS_INFORMATION = DllStructCreate($tagPROCESS_INFORMATION)
+
+    ; Process handle of some process that's run non-elevated. For example "Explorer"
+    Local $hProcess = _WinAPI_OpenProcess($PROCESS_ALL_ACCESS, 0, ProcessExists("explorer.exe"))
+
+    ; If successful
+    If $hProcess Then
+        ; Token...
+        Local $hTokOriginal = _Security__OpenProcessToken($hProcess, $TOKEN_ALL_ACCESS)
+        ; Process handle is no longer needed. Close it
+        _WinAPI_CloseHandle($hProcess)
+        ; If successful
+        If $hTokOriginal Then
+            ; Duplicate the original token
+            Local $hTokDuplicate = _Security__DuplicateTokenEx($hTokOriginal, $TOKEN_ALL_ACCESS, $SECURITYIMPERSONATION, $TOKENPRIMARY)
+            ; Close the original token
+            _WinAPI_CloseHandle($hTokOriginal)
+            ; If successful
+            If $hTokDuplicate Then
+                ; Create process with this new token
+                _Security__CreateProcessWithToken($hTokDuplicate, 0, $sCommandLine, 0, @ScriptDir, $tSTARTUPINFO, $tPROCESS_INFORMATION)
+
+                ; Close that token
+                _WinAPI_CloseHandle($hTokDuplicate)
+                ; Close get handles
+                _WinAPI_CloseHandle(DllStructGetData($tPROCESS_INFORMATION, "hProcess"))
+                _WinAPI_CloseHandle(DllStructGetData($tPROCESS_INFORMATION, "hThread"))
+                ; Return PID of newly created process
+                Return DllStructGetData($tPROCESS_INFORMATION, "ProcessID")
+            EndIf
+        EndIf
+    EndIf
+EndFunc   ;==>_RunNonElevated
