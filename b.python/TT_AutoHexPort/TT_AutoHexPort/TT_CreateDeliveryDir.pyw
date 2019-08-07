@@ -1,3 +1,5 @@
+#!python2
+
 #TT Folder System Creation
 #2016, mocapi
 #ver 1.0

@@ -1,3 +1,5 @@
+#!python2
+
 #TODO
 # in TotalCommander
 # Copy the contents of current folder (panel) to all folders in the opposite panel

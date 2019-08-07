@@ -1,3 +1,5 @@
+#!python2
+
 #Usage:
 #In Total Commander set button "...CopyCurrentToMulti.py" with parameters "%P " "%T " (note the spaces before trailing ")
 # Copy the contents of current folder (panel) to all folders in the opposite panel

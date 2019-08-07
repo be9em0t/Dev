@@ -1,3 +1,5 @@
+#!python2
+
 #Usage:
 #In Total Commander set button "...TT_JVLOD2_populate.py" with parameters "%P " "%T " (note the spaces before trailing ")
 #select for source dir an existing directory containing the results from Photoshop Action (i.e. "c:\Work\BATCH\")

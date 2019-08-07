@@ -1,0 +1,22 @@
+{
+  "name": "Color Changer",
+  "author": "Microsoft Edge Extension Developer",
+  "version": "1.0",
+  "description": "Change the color of the header on docs.microsoft.com",
+  "permissions": [
+    "*://docs.microsoft.com/*",
+    "tabs"
+  ], 
+  "browser_action": {
+    "default_icon": {
+      "20": "images/color-changer20.png",
+      "40": "images/color-changer40.png"
+    },
+    "default_title": "Color Changer",
+    "default_popup": "popup.html"
+    },
+    "icons": {
+      "25": "images/color-changer25.png",
+      "48": "images/color-changer48.png"
+    }
+}

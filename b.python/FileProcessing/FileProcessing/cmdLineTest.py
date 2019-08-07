@@ -1,3 +1,5 @@
+#!python2
+
 #TODO
 # in TotalCommander
 

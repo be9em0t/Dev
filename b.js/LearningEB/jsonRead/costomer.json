@@ -1,0 +1,6 @@
+// customer.json
+{
+  "name": "Mega Corp.",
+  "order_count": 83,
+  "address": "Infinity Loop Drive",
+}

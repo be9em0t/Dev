@@ -1,0 +1,12 @@
+/* font converted using font-converter.net. thank you! */
+@font-face {
+  font-family: "NowayRegular-Italic";
+  src: url("./fonts/NowayRegularItalic.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/NowayRegularItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/NowayRegularItalic.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/NowayRegularItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/NowayRegularItalic.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/NowayRegularItalic.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}

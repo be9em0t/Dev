@@ -1,3 +1,5 @@
+#!python2
+
 #Usage:
 #In Total Commander set button "...TT_LM_ImageDir.py" with parameters "%P " "%T " (note the spaces before trailing ")
 #select for source dir an existing directory containing the images saved from Photoshop  (i.e. "~\Desktop\")

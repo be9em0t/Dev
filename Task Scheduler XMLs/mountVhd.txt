@@ -1,2 +1,0 @@
-select vdisk file="D:\OneVHDX.vhdx"
-attach vdisk

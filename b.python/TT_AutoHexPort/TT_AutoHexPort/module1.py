@@ -1,3 +1,5 @@
+#!python2
+
 import Tkinter
 import tkMessageBox
 

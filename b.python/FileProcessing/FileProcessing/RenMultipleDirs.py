@@ -1,3 +1,5 @@
+#!python2
+
 #Usage:
 #In Total Commander set button "...RenMultipleDirs.py" with parameter "%P "  (note the spaces before trailing ")
 # searches subdirs for directory named DIR_TO_PROCESS 

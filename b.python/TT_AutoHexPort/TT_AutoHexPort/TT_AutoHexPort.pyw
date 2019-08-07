@@ -1,3 +1,5 @@
+#!python2
+
 #TT autoExport
 #2016, mocapi
 #ver 1.5

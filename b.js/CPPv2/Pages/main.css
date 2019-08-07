@@ -1,0 +1,245 @@
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-Book.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/Gotham-Book.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/Gotham-Book.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/Gotham-Book.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/Gotham-Book.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/Gotham-Book.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-Bold.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/Gotham-Bold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/Gotham-Bold.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/Gotham-Bold.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/Gotham-Bold.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/Gotham-Bold.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-BookItalic.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/Gotham-BookItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/Gotham-BookItalic.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/Gotham-BookItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/Gotham-BookItalic.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/Gotham-BookItalic.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-BoldItalic.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/Gotham-BoldItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/Gotham-BoldItalic.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/Gotham-BoldItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/Gotham-BoldItalic.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/Gotham-BoldItalic.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: bold;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Gotham";
+  src: url("./fonts/Gotham-Medium.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/Gotham-Medium.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/Gotham-Medium.otf") format("opentype"), /* Open Type Font */
+    /* url("./fonts/Gotham-BoldItalic.ttf") format("truetype"), Safari, Android, iOS */
+    url("./fonts/Gotham-Medium.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/Gotham-Medium.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noway";
+  src: url("./fonts/NowayRegular.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/NowayRegular.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/NowayRegular.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/NowayRegular.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/NowayRegular.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/NowayRegular.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noway";
+  src: url("./fonts/NowayBold.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/NowayBold.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/NowayBold.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/NowayBold.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/NowayBold.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/NowayBold.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: "Noway";
+  src: url("./fonts/NowayRegularItalic.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/NowayRegularItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/NowayRegularItalic.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/NowayRegularItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/NowayRegularItalic.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/NowayRegularItalic.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: normal;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: "Noway";
+  src: url("./fonts/NowayBoldItalic.eot"); /* IE9 Compat Modes */
+  src: url("./fonts/NowayBoldItalic.eot?#iefix") format("embedded-opentype"), /* IE6-IE8 */
+    url("./fonts/NowayBoldItalic.otf") format("opentype"), /* Open Type Font */
+    url("./fonts/NowayBoldItalic.ttf") format("truetype"), /* Safari, Android, iOS */
+    url("./fonts/NowayBoldItalic.woff") format("woff"), /* Modern Browsers */
+    url("./fonts/NowayBoldItalic.woff2") format("woff2"); /* Modern Browsers */
+  font-weight: bold;
+  font-style: italic;
+}
+
+* {
+  font-family: Noway, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+  font-family: Gotham, Arial, Helvetica, sans-serif;
+
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  /* font-weight: 500; */
+}
+
+.containerBody {
+  /* width: 90em;  1440px/16px = 90em */
+  width: 60rem;
+  /* 960px/16px = 60em */
+  max-width: 100%;
+  margin: auto;
+}
+
+.navMenu {
+  background: url('images/NavMenu.png') center;
+  background-size: cover;
+  padding: 0rem 0rem;
+  /* width: 100%; */
+  /*height: 2.5rem; */
+  height: 54px;
+
+  /* Grid styles */
+  /* display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); */
+}
+
+.navMenuStable {
+  padding: 0rem 0rem;
+  /* width: 100%; */
+  /*height: 2.5rem; */
+  height: 54px;
+
+  /* Grid styles */
+  display: grid;
+  align-items: left;
+  grid-template-columns: 70px 75px 120px 100px 80px;
+}
+
+.navMenu-item {
+  background-color: rgba(255, 255, 255, 0.8);
+  border: 1px solid rgba(0, 0, 0, 0.8);
+  padding: 20px;
+  font-size: 30px;
+  text-align: center;
+}
+
+.navMenuStable > a {
+  float: left;
+  padding: 0px 0px;
+  text-align: left;
+  color:gray;
+  font-family: Gotham, Arial, Helvetica, sans-serif;
+  text-decoration: none;
+  /* font-size: 17px; */
+}
+
+.navMenuStable > a.active {
+  color:black;
+  font-weight: bold;
+}
+
+.navMenuStable > a:hover {
+  float: left;
+  padding: 0px 0px;
+  text-align: left;
+  color:black;
+  font-family: Gotham, Arial, Helvetica, sans-serif;
+  /* font-family: Noway, 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif; */
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.sect {
+  /* background: url('images/Hero.png') center; */
+  background-size: cover;
+  padding: 0rem 0rem;
+  /* height: 29.75em; */
+
+  /* Grid styles */
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+    
+.heroTT {
+  background: url('images/Hero.png') center;
+  background-size: cover;
+  padding: 0rem 0rem;
+  height: 29.75em;
+  /* 476px; */
+
+  /* Grid styles */
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+p {
+  font-family: "Noway";
+  font-size: 14.67px;
+  color: grey;
+}
+
+a {
+  font-family: "Noway";
+  font-size: 14.67px;
+  /* color: grey; */
+}
+
+h1 {
+  font-family: "Gotham-Book", 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
+  font-weight: bold;
+  font-style: italic;
+
+  font-size: 26.7px;
+  /* font-weight: 600; */
+  color: brown;
+}
+/* demo start */
+.hero {
+  /* Photo by mnm.all on Unsplash */
+  background: url('https://images.unsplash.com/photo-1518176258769-f227c798150e') center;
+  background-size: cover;
+  padding: 4rem 2rem;
+
+  /* Grid styles */
+  display: grid;
+  align-items: center;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}

@@ -1,0 +1,9 @@
+body {
+  background-color: black;
+}
+h1 {
+  color: yellowgreen; font-weight: 100; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+p {
+  color: navajowhite; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}

@@ -1,3 +1,5 @@
+#!python2
+
 #Usage:
 #In Total Commander set button "...TT_IconPopulate.py" with parameters "%P " "%T " (note the spaces before trailing ")
 #select for source dir an existing max+png+bmp dir (i.e. Cartagena)
